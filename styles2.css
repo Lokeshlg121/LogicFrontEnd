@@ -1,0 +1,101 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #1e1e1e;
+    color: #00ff00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Terminal Container */
+.terminal-container {
+    width: 80%;
+    max-width: 1000px;
+    height: 80%;
+    border: 2px solid #00ff00;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.terminal-header {
+    text-align: center;
+    padding-bottom: 10px;
+    color: #00ff00;
+}
+
+/* Chat Messages */
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.messages div {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.user-message {
+    color: #00ff00;
+}
+
+.bot-message {
+    color: #ffff00;
+}
+
+/* Input Area */
+.input-container {
+    display: flex;
+    align-items: flex-start; /* Align items to top since textarea will grow */
+}
+
+.prompt {
+    padding-right: 10px;
+    margin-top: 10px; /* Align with the textarea */
+}
+
+/* Textarea Input */
+textarea {
+    background-color: #1e1e1e;
+    color: #00ff00;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    resize: none; /* Prevent manual resizing by the user */
+    height: 40px; /* Initial height */
+    max-height: 150px; /* Maximum height */
+    overflow-y: hidden; /* Hide vertical scroll */
+    line-height: 1.5;
+}
+
+/* Adjust textarea placeholder */
+textarea::placeholder {
+    color: #555;
+}
+
+/* Submit Button */
+button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #00ff00;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+}
+
+button:hover {
+    background-color: #00e600;
+}
