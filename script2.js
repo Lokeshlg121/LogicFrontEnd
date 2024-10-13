@@ -1,4 +1,4 @@
-const apiEndpoint = 'http://localhost:3000/getPrompt'; 
+const apiEndpoint = 'http://52.14.63.130:3000/getPrompt'; 
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
