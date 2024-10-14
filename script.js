@@ -25,7 +25,7 @@ signupForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('signup-password').value;
 
     try {
-        const response = await fetch('http://3.23.20.238:3000/signup', { // Replace with your actual signup API URL
+        const response = await fetch('http://52.34.111.7:3000/signup', { // Replace with your actual signup API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('login-password').value;
 
     try {
-        const response = await fetch('http://3.23.20.238:3000/login', { // Replace with your actual login API URL
+        const response = await fetch('http://52.34.111.7:3000/login', { // Replace with your actual login API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

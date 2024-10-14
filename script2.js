@@ -1,5 +1,5 @@
 // API url
-const apiEndpoint = 'http://3.23.20.238:3000/getPrompt'; 
+const apiEndpoint = 'http://52.34.111.7:3000/getPrompt'; 
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -137,7 +137,7 @@ function displayApiResponse(apiResponse) {
 // Send the message text to an API when the Twitter icon is clicked
 async function sendTextToApi(messageText) {
     try {
-        const response = await fetch('http://3.23.20.238:3000/postTweet', {  // Replace with your actual API endpoint
+        const response = await fetch('http://52.34.111.7:3000/postTweet', {  // Replace with your actual API endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
