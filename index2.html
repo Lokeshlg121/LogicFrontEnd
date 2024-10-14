@@ -8,23 +8,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="terminal-container" id="app-container">
-        <!-- Chat Terminal Interface -->
-        <div class="terminal-header">
-            <h1>Terminal ChatGPT</h1>
+    <div class="app-wrapper">
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-bars"></i>
         </div>
 
-        <!-- Chat Messages Section -->
-        <div class="messages" id="messages"></div>
+        <!-- Sidebar Section -->
+        <div class="sidebar" id="sidebar">
+            <ul>
+                <li><i class="fab fa-twitter"></i> Twitter</li>
+                <li><i class="fab fa-instagram"></i> Instagram</li>
+                <li><i class="fab fa-facebook"></i> Facebook</li>
+            </ul>
+        </div>
 
-        <!-- User Input Section -->
-        <div class="input-container">
-            <span class="prompt">>_</span>
-            <textarea id="user-input" placeholder="Ask me anything..." autofocus autocomplete="off"></textarea>
-            <button id="submit-btn">Submit</button>
+        <!-- Terminal Container -->
+        <div class="terminal-container" id="app-container">
+            <!-- Chat Terminal Interface -->
+            <div class="terminal-header">
+                <h1>TerminalBot</h1>
+            </div>
+
+            <!-- Chat Messages Section -->
+            <div class="messages" id="messages"></div>
+
+            <!-- User Input Section -->
+            <div class="input-container">
+                <span class="prompt">>_</span>
+                <textarea id="user-input" placeholder="Ask me anything..." autofocus autocomplete="off"></textarea>
+                <button id="submit-btn">Submit</button>
+            </div>
         </div>
     </div>
 
     <script src="script2.js"></script>
+    <script>
+        // JavaScript to toggle the sidebar visibility
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // API url
-const apiEndpoint = 'http://52.14.63.130:3000/getPrompt'; 
+const apiEndpoint = 'http://3.23.20.238:3000/getPrompt'; 
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -75,7 +75,11 @@ function appendMessage(message, className) {
 
         // Add click event to Twitter icon
         twitterIcon.addEventListener('click', () => {
-            sendTextToApi(message);
+            // Confirmation popup before tweeting
+            const isConfirmed = confirm('Are you sure you want to tweet this message?');
+            if (isConfirmed) {
+                sendTextToApi(message);  // Send the tweet if the user confirms
+            }
         });
 
         // Append the Twitter icon to the message
@@ -115,7 +119,7 @@ function displayApiResponse(apiResponse) {
         // If the conversation array exists, avoid re-displaying the main response
         if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
             apiResponse.conversation.forEach(convo => {
-                 if (convo.role === 'usersddd') {
+                 if (convo.role === 'userss') {
                     appendMessage('> ' + convo.content, 'user-message');
                 } else if (convo.role === 'assistant') {
                     // Avoid adding the same message twice by checking for duplicates
@@ -133,7 +137,7 @@ function displayApiResponse(apiResponse) {
 // Send the message text to an API when the Twitter icon is clicked
 async function sendTextToApi(messageText) {
     try {
-        const response = await fetch('http://localhost:3000/postTweet', {  // Replace with your actual API endpoint
+        const response = await fetch('http://3.23.20.238:3000/postTweet', {  // Replace with your actual API endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -155,4 +159,3 @@ async function sendTextToApi(messageText) {
         alert('An error occurred while uploading the tweet.');  // Show error popup on exception
     }
 }
-

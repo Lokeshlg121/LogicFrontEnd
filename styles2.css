@@ -16,16 +16,76 @@ body {
     overflow: hidden;
 }
 
+.app-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: relative; /* Allows for absolute positioning of sidebar */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 0;
+    max-width: 200px;
+    background-color: #000;
+    border-right: 2px solid #00ff00;
+    padding: 20px;
+    color: #00ff00;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
+
+.sidebar li {
+    margin: 20px 0;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar li i {
+    margin-right: 10px;
+}
+
+.sidebar.active {
+    width: 200px; /* Sidebar expands to full width */
+}
+
+.sidebar.active ul {
+    opacity: 1; /* Show the menu items when sidebar is active */
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+    color: #00ff00;
+    font-size: 24px;
+}
+
 /* Terminal Container */
 .terminal-container {
-    width: 80%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 800px;
     height: 80%;
     border: 2px solid #00ff00;
     background-color: #000;
     display: flex;
     flex-direction: column;
     padding: 20px;
+    margin: auto; /* Center the terminal */
 }
 
 .terminal-header {
@@ -57,12 +117,12 @@ body {
 /* Input Area */
 .input-container {
     display: flex;
-    align-items: flex-start; /* Align items to top since textarea will grow */
+    align-items: flex-start;
 }
 
 .prompt {
     padding-right: 10px;
-    margin-top: 10px; /* Align with the textarea */
+    margin-top: 10px;
 }
 
 /* Textarea Input */
@@ -73,14 +133,13 @@ textarea {
     outline: none;
     width: 100%;
     font-size: 16px;
-    resize: none; /* Prevent manual resizing by the user */
-    height: 40px; /* Initial height */
-    max-height: 150px; /* Maximum height */
-    overflow-y: hidden; /* Hide vertical scroll */
+    resize: none;
+    height: 40px;
+    max-height: 150px;
+    overflow-y: hidden;
     line-height: 1.5;
 }
 
-/* Adjust textarea placeholder */
 textarea::placeholder {
     color: #555;
 }
@@ -100,15 +159,21 @@ button:hover {
     background-color: #00e600;
 }
 
+/* FontAwesome Icons */
 .fab {
-    font-size: 20px; /* Adjust the size of the icon */
+    font-size: 20px; /* Adjust icon size */
     color: #1DA1F2; /* Twitter's official blue color */
 }
 
-a:hover .fab {
-    color: #0d8bd6; /* Slightly darker on hover */
+/* Hover Effects */
+.sidebar li:hover .fab {
+    color: #0d8bd6; /* Slight hover effect */
 }
 
-a {
-    cursor: pointer;
+.sidebar.active li:nth-child(2) .fab {
+    color: #E1306C; /* Instagram pink color */
+}
+
+.sidebar.active li:nth-child(3) .fab {
+    color: #4267B2; /* Facebook blue color */
 }
