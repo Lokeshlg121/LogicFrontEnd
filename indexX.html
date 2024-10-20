@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Twitter PIN</title>
+    <script>
+        function submitPin() {
+            const pin = document.getElementById('pin').value;
+            window.location.href = `http://localhost:3000/verify-pin?pin=${pin}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Enter the Twitter PIN</h1>
+    <input type="text" id="pin" placeholder="Enter the PIN" />
+    <button onclick="submitPin()">Submit PIN</button>
+    <p id="message"></p>
+</body>
+</html>

@@ -1,5 +1,5 @@
-// API url
-const apiEndpoint = 'http://35.94.170.31:3000/getPrompt'; 
+// API endpoint
+const apiEndpoint = 'http://localhost:3000/getPrompt'; 
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -7,17 +7,84 @@ const submitBtn = document.getElementById('submit-btn');
 // To prevent multiple submissions
 let isSubmitting = false;
 
-// Handle Sending User Input with Enter Key
+// Handle user input with Enter key
 userInput.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter' && !e.shiftKey && userInput.value.trim()) {
-        e.preventDefault();  // Prevent newline on Enter
+        e.preventDefault();
         if (!isSubmitting) {
             await handleUserInput(); 
         }
     }
 });
 
-// Handle Sending User Input with Submit Button
+// Toggle sidebar visibility
+document.getElementById('sidebar-toggle').addEventListener('click', function() {
+    const sidebar = document.getElementById('sidebar');
+    const appWrapper = document.getElementById('app-wrapper');
+    sidebar.classList.toggle('active');
+    appWrapper.classList.toggle('active');
+});
+
+// Add event listener for Twitter login button
+document.getElementById('twitter-login').addEventListener('click', async () => {
+    try {
+        console.log("About to call login API for Twitter");
+        const response = await fetch('http://localhost:3000/login-twitter', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Redirecting to Twitter authorization URL:", data.url);
+            window.location.href = data.url;
+        } else {
+            const errorData = await response.json();
+            alert('Error during Twitter login: ' + errorData.error);
+        }
+    } catch (error) {
+        console.error('Error during login request:', error);
+        alert('Error during login request: ' + error.message);
+    }
+});
+
+// Handle Twitter callback and redirect to success page
+async function handleTwitterCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const oauth_token = params.get('oauth_token');
+    const oauth_verifier = params.get('oauth_verifier');
+
+    if (oauth_token && oauth_verifier) {
+        try {
+            const response = await fetch('http://localhost:3000/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ oauth_token, oauth_verifier })
+            });
+
+            const data = await response.json();
+            console.log("Response from callback:", data);
+
+            if (response.ok) {
+                localStorage.setItem('oauth_token', data.accessToken);
+                window.location.href = 'success.html?oauth_token=' + oauth_token;
+            } else {
+                alert('Error verifying Twitter callback: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error during callback handling:', error);
+            alert('Error during callback handling: ' + error.message);
+        }
+    }
+}
+
+// Automatically handle the callback if present
+document.addEventListener('DOMContentLoaded', handleTwitterCallback);
+
+// Handle user input with the submit button
 submitBtn.addEventListener('click', async () => {
     if (userInput.value.trim() && !isSubmitting) {
         await handleUserInput(); 
@@ -26,34 +93,31 @@ submitBtn.addEventListener('click', async () => {
 
 // Adjust textarea height dynamically
 userInput.addEventListener('input', () => {
-    userInput.style.height = '40px'; // Reset the height
-    userInput.style.height = `${userInput.scrollHeight}px`; // Set new height
+    userInput.style.height = '40px';
+    userInput.style.height = `${userInput.scrollHeight}px`;
 });
 
 // Handle the user input and send it to the API
 async function handleUserInput() {
     const question = userInput.value.trim();
 
-    if (!question || isSubmitting) return; // Prevent processing empty or multiple submissions
+    if (!question || isSubmitting) return;
 
-    appendMessage('> ' + question, 'user-message'); // Append question only once
-    userInput.value = ''; // Clear input field
-    userInput.style.height = '40px'; // Reset textarea height
+    appendMessage('> ' + question, 'user-message');
+    userInput.value = '';
+    userInput.style.height = '40px';
 
-    // Disable input and button while processing to prevent duplicate calls
     isSubmitting = true;
     userInput.disabled = true;
     submitBtn.disabled = true;
 
-    // Call the API with the user question
     try {
         const response = await callChatGPTApi(question);
-        console.log('API Response:', response); // Only logging API response
-        displayApiResponse(response); // Display the response from the API
+        console.log('API Response:', response);
+        displayApiResponse(response);
     } catch (error) {
         appendMessage('Error: Unable to get response from the server.', 'bot-message');
     } finally {
-        // Enable input and button after processing
         isSubmitting = false;
         userInput.disabled = false;
         submitBtn.disabled = false;
@@ -66,31 +130,27 @@ function appendMessage(message, className) {
     messageElement.textContent = message;
     messageElement.classList.add(className);
 
-    // Check if it's a bot message and append a Twitter icon
     if (className === 'bot-message') {
         const twitterIcon = document.createElement('a');
-        twitterIcon.href = '#'; // Prevent default link behavior
-        twitterIcon.innerHTML = '<i class="fab fa-twitter"></i>'; // FontAwesome Twitter icon
-        twitterIcon.style.marginLeft = '10px'; // Add space between text and icon
+        twitterIcon.href = '#';
+        twitterIcon.innerHTML = '<i class="fab fa-twitter"></i>';
+        twitterIcon.style.marginLeft = '10px';
 
-        // Add click event to Twitter icon
         twitterIcon.addEventListener('click', () => {
-            // Confirmation popup before tweeting
             const isConfirmed = confirm('Are you sure you want to tweet this message?');
             if (isConfirmed) {
-                sendTextToApi(message);  // Send the tweet if the user confirms
+                sendTextToApi(message);
             }
         });
 
-        // Append the Twitter icon to the message
         messageElement.appendChild(twitterIcon);
     }
 
     messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to bottom
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-// Call the API and get the response
+// Call the ChatGPT API with the user input
 async function callChatGPTApi(question) {
     const response = await fetch(apiEndpoint, {
         method: 'POST',
@@ -113,16 +173,13 @@ async function callChatGPTApi(question) {
 // Display the response from the API
 function displayApiResponse(apiResponse) {
     if (apiResponse.statusCode === 200) {
-        // Display the assistant's response in the chat
         appendMessage(apiResponse.response, 'bot-message');
 
-        // If the conversation array exists, avoid re-displaying the main response
         if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
             apiResponse.conversation.forEach(convo => {
-                 if (convo.role === 'userss') {
+                if (convo.role === 'user') {
                     appendMessage('> ' + convo.content, 'user-message');
                 } else if (convo.role === 'assistant') {
-                    // Avoid adding the same message twice by checking for duplicates
                     if (convo.content !== apiResponse.response) {
                         appendMessage(convo.content, 'bot-message');
                     }
@@ -134,28 +191,39 @@ function displayApiResponse(apiResponse) {
     }
 }
 
-// Send the message text to an API when the Twitter icon is clicked
+// Send the message text to Twitter API for posting as a tweet
 async function sendTextToApi(messageText) {
+    const oauth_token = localStorage.getItem('oauth_token');
+
     try {
-        const response = await fetch('http://35.94.170.31:3000/postTweet', {  // Replace with your actual API endpoint
+        const response = await fetch(`http://localhost:3000/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
             method: 'POST',
-            headers: {
+            credentials: 'include',
+                headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                tweetContent: messageText
+                status: messageText,
+                // oauth_token: oauth_token
             }),
         });
-
+        // const response = await fetch('http://35.94.170.31:3000/postTweet', {  // Replace with your actual API endpoint
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         tweetContent: messageText
+        //     }),
+        // });
+        const data = await response.json();
         if (response.ok) {
-            console.log('Text sent successfully');
-            alert('Tweet uploaded successfully!');  // Show popup on success
+            alert('Tweet posted successfully: ' + data.tweet.full_text);
         } else {
-            console.error('Failed to send text:', response.statusText);
-            alert('Failed to upload the tweet.');  // Show error popup on failure
+            alert('Error posting tweet: ' + (data.error || 'Unknown error'));
         }
     } catch (error) {
-        console.error('Error sending text:', error);
-        alert('An error occurred while uploading the tweet.');  // Show error popup on exception
+        console.error('Error during tweet:', error);
+        alert('Error during tweet: ' + error.message);
     }
 }

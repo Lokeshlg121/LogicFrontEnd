@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Login Success</title>
+</head>
+<body>
+    <h1>Twitter Authorization Successful!</h1>
+    <p>You are now logged in with Twitter and can post a tweet.</p>
+
+    <div id="tweet-container">
+        <h2>Post a Tweet</h2>
+        <input type="text" id="tweet" placeholder="Write your tweet here">
+        <button id="tweet-btn">Tweet</button>
+    </div>
+
+    <script>
+        document.getElementById('tweet-btn').addEventListener('click', async () => {
+            const tweet = document.getElementById('tweet').value.trim();
+            const oauth_token = localStorage.getItem('oauth_token');
+
+            try {
+                const response = await fetch(`http://localhost:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${oauth_token}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Tweet posted successfully: ' + data.tweet.full_text);
+                } else {
+                    alert('Error posting tweet: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error during tweet:', error);
+                alert('Error during tweet: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

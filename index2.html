@@ -3,12 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Chat Interface</title>
+    <title>Terminal Chat Interface with Twitter OAuth</title>
     <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Styles remain the same */
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background: #343a40;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%);
+            z-index: 1000;
+        }
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 15px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        .app-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .app-wrapper.active {
+            margin-left: 250px;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: #343a40;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .terminal-container {
+            padding: 20px;
+            background: #2c2f33;
+            margin-top: 60px;
+            border-radius: 10px;
+            color: #fff;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+        .input-container .prompt {
+            margin-right: 10px;
+        }
+        #user-input {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            resize: none;
+            min-height: 40px;
+            overflow-y: hidden;
+        }
+        #pin-container, #tweet-container {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-wrapper">
+    <div class="app-wrapper" id="app-wrapper">
         <!-- Sidebar Toggle Button -->
         <div class="sidebar-toggle" id="sidebar-toggle">
             <i class="fas fa-bars"></i>
@@ -17,7 +90,7 @@
         <!-- Sidebar Section -->
         <div class="sidebar" id="sidebar">
             <ul>
-                <li><i class="fab fa-twitter"></i> Twitter</li>
+                <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
                 <li><i class="fab fa-instagram"></i> Instagram</li>
                 <li><i class="fab fa-facebook"></i> Facebook</li>
             </ul>
@@ -25,29 +98,81 @@
 
         <!-- Terminal Container -->
         <div class="terminal-container" id="app-container">
-            <!-- Chat Terminal Interface -->
             <div class="terminal-header">
                 <h1>TerminalBot</h1>
             </div>
-
-            <!-- Chat Messages Section -->
             <div class="messages" id="messages"></div>
-
-            <!-- User Input Section -->
             <div class="input-container">
                 <span class="prompt">>_</span>
                 <textarea id="user-input" placeholder="Ask me anything..." autofocus autocomplete="off"></textarea>
                 <button id="submit-btn">Submit</button>
             </div>
+            <!-- <div id="tweet-container">
+                <h2>Post a Tweet</h2>
+                <input type="text" id="tweet" placeholder="Write your tweet here">
+                <button id="tweet-btn">Tweet</button>
+            </div> -->
         </div>
     </div>
 
+    <!-- JavaScript Files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
     <script>
-        // JavaScript to toggle the sidebar visibility
-        document.getElementById('sidebar-toggle').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
+        // Handle OAuth token from URL and store in local storage
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const oauth_token = params.get('oauth_token');
+
+            if (oauth_token) {
+                // Store the OAuth token in local storage for later use
+                localStorage.setItem('oauth_token', oauth_token);
+                console.log('OAuth token stored:', oauth_token);
+
+                // Show the tweet container if the user is authenticated
+                document.getElementById('tweet-container').style.display = 'block';
+            } else {
+                alert('OAuth token missing. Please log in again.');
+                window.location.href = 'twiterUi.html'; // Redirect to login page if no token
+            }
+        });
+
+        // Add event listener for tweet button
+        document.getElementById('tweet-btn').addEventListener('click', async () => {
+            const tweet = document.getElementById('tweet').value.trim();
+            const oauth_token = localStorage.getItem('oauth_token');
+
+            if (!oauth_token) {
+                alert('You need to log in with Twitter first.');
+                return;
+            }
+
+            if (!tweet) {
+                alert('Please enter a tweet.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${encodeURIComponent(oauth_token)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Tweet posted successfully: ' + data.tweet.full_text);
+                    document.getElementById('tweet').value = ''; // Clear the tweet input after posting
+                } else {
+                    alert('Error posting tweet: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error during tweet:', error);
+                alert('Error during tweet: ' + error.message);
+            }
         });
     </script>
 </body>
