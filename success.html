@@ -21,7 +21,7 @@
             const oauth_token = localStorage.getItem('oauth_token');
 
             try {
-                const response = await fetch(`http://localhost:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${oauth_token}`, {
+                const response = await fetch(`http://34.215.242.148:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${oauth_token}`, {
                     method: 'GET',
                     credentials: 'include'
                 });

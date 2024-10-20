@@ -5,7 +5,7 @@ async function fetchEmails() {
     emailList.innerHTML = 'Loading...';
 
     try {
-        const response = await fetch('http://localhost:5000/emails');
+        const response = await fetch('http://34.215.242.148:3000/emails');
         if (!response.ok) {
             throw new Error('Failed to fetch emails');
         }
