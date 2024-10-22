@@ -165,10 +165,10 @@
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('Tweet posted successfully: ' + data.tweet.full_text);
+                    alert('Tweet posted successfully:');
                     document.getElementById('tweet').value = ''; // Clear the tweet input after posting
                 } else {
-                    alert('Error posting tweet: ' + data.error);
+                    alert('Connect your Twitter account through the application.');
                 }
             } catch (error) {
                 console.error('Error during tweet:', error);

@@ -4,26 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gmail Reader</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Gmail Reader</h1>
-    <button id="auth-btn">Authenticate with Google</button>
-    <button id="fetch-emails-btn" disabled>Fetch Latest Emails</button>
-    <div id="email-list" class="email-list">
-      <!-- Emails will be displayed here -->
+  <div class="container mt-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="card-title text-center mb-4">Gmail Reader</h1>
+        <div class="d-flex justify-content-center mb-4">
+          <button id="auth-btn" class="btn btn-primary mx-2">Authenticate with Google</button>
+          <button id="fetch-emails-btn" class="btn btn-success mx-2" disabled>Fetch Latest Emails</button>
+        </div>
+        <div id="email-list" class="email-list">
+          <!-- Emails will be displayed here -->
+        </div>
+      </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.getElementById('auth-btn').addEventListener('click', async () => {
-      window.location.href = '/auth';
+      window.location.href = 'http://localhost:3000/auth';
     });
 
     document.getElementById('fetch-emails-btn').addEventListener('click', async () => {
       try {
-        const response = await fetch('/api/emails');
+        const response = await fetch('http://localhost:3000/api/emails');
         const emails = await response.json();
         const emailList = document.getElementById('email-list');
         emailList.innerHTML = '';
@@ -31,22 +39,24 @@
         if (emails.length) {
           emails.forEach(email => {
             const emailItem = document.createElement('div');
-            emailItem.className = 'email-item';
+            emailItem.className = 'card mb-3';
             emailItem.innerHTML = `
-              <h3>From: ${email.from}</h3>
-              <h4>Subject: ${email.subject}</h4>
-              <p><strong>Snippet:</strong> ${email.snippet}</p>
-              <p><strong>Body:</strong></p>
-              <pre>${email.body}</pre>
+              <div class="card-body">
+                <h5 class="card-title">From: ${email.from}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Subject: ${email.subject}</h6>
+                <p class="card-text"><strong>Snippet:</strong> ${email.snippet}</p>
+                <p class="card-text"><strong>Body:</strong></p>
+                <pre>${email.body}</pre>
+              </div>
             `;
             emailList.appendChild(emailItem);
           });
         } else {
-          emailList.innerHTML = '<p>No emails found.</p>';
+          emailList.innerHTML = '<div class="alert alert-info">No emails found.</div>';
         }
       } catch (error) {
         console.error('Error fetching emails:', error);
-        document.getElementById('email-list').innerHTML = '<p>Error fetching emails. Please try again.</p>';
+        document.getElementById('email-list').innerHTML = '<div class="alert alert-danger">Error fetching emails. Please try again.</div>';
       }
     });
 

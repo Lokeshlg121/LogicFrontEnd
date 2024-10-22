@@ -34,8 +34,9 @@ signupForm.addEventListener('submit', async (e) => {
         });
 
         const data = await response.json();
-        console.log("data",data)
+        console.log("data", data);
         if (data.signup) {
+            localStorage.setItem('userEmail', email); // Store email in localStorage
             alert('Signup successful!');
             window.location.href = 'index2.html'; // Redirect to index2.html
             toggleForms(); // Switch to login form
@@ -66,13 +67,11 @@ loginForm.addEventListener('submit', async (e) => {
 
         const data = await response.json();
         if (data.success) {
+            localStorage.setItem('userEmail', email); // Store email in localStorage
             alert('Login successful!');
             window.location.href = 'index2.html'; // Redirect to index2.html
-            // chatContainer.style.display = 'block'; // Show chat interface
-            // signupContainer.style.display = 'none'; // Hide signup and login forms
-            // loginContainer.style.display = 'none';
         } else {
-            // alert(data.message || 'Login failed.');
+            alert('Login failed.');
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -97,7 +96,7 @@ sendButton.addEventListener('click', async () => {
 const appendMessage = (message) => {
     const messageElement = document.createElement('div');
     messageElement.textContent = message;
-    messagesDiv.appendChild(messageElement);
+    // messagesDiv.appendChild(messageElement);
     messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to bottom
 };
 
@@ -111,4 +110,3 @@ const simulateChatGPTResponse = async (question) => {
         }, 1000); // Simulated delay
     });
 };
-

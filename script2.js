@@ -152,13 +152,18 @@ function appendMessage(message, className) {
 
 // Call the ChatGPT API with the user input
 async function callChatGPTApi(question) {
+    // Retrieve email from local storage
+    const email = localStorage.getItem('userEmail') || 'default@example.com'; // Replace 'default@example.com' with your desired default value
+
+    // Make the API call with the email as userId
     const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            prompt: question
+            prompt: question,
+            userId: email
         }),
     });
 
@@ -170,26 +175,35 @@ async function callChatGPTApi(question) {
     return data;
 }
 
-// Display the response from the API
-function displayApiResponse(apiResponse) {
-    if (apiResponse.statusCode === 200) {
-        appendMessage(apiResponse.response, 'bot-message');
 
+// Display the response from the API
+// Display the response from the API and clear existing messages
+// Display the response from the API and clear existing messages
+function displayApiResponse(apiResponse) {
+    // Clear existing messages in the chat window
+    messagesDiv.innerHTML = '';
+
+    // Check if the API response is successful
+    if (apiResponse.statusCode === 200) {
+        // If there's a conversation array, add each message in order
         if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
             apiResponse.conversation.forEach(convo => {
                 if (convo.role === 'user') {
                     appendMessage('> ' + convo.content, 'user-message');
                 } else if (convo.role === 'assistant') {
-                    if (convo.content !== apiResponse.response) {
-                        appendMessage(convo.content, 'bot-message');
-                    }
+                    appendMessage(convo.content, 'bot-message');
                 }
             });
+        } else {
+            // Add the main response message to the chat if no conversation array is present
+            appendMessage(apiResponse.response, 'bot-message');
         }
     } else {
         appendMessage('Error: ' + apiResponse.message, 'bot-message');
     }
 }
+
+
 
 // Send the message text to Twitter API for posting as a tweet
 async function sendTextToApi(messageText) {
