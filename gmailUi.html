@@ -1,14 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gmail Email Fetcher</title>
-    <script src="gmailScript.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail Reader</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Gmail Inbox</h1>
-    <button id="fetchEmailsButton">Fetch Emails</button>
-    <div id="emailList"></div>
+  <div class="container">
+    <h1>Gmail Reader</h1>
+    <button id="auth-btn">Authenticate with Google</button>
+    <button id="fetch-emails-btn" disabled>Fetch Latest Emails</button>
+    <div id="email-list" class="email-list">
+      <!-- Emails will be displayed here -->
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('auth-btn').addEventListener('click', async () => {
+      window.location.href = '/auth';
+    });
+
+    document.getElementById('fetch-emails-btn').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/emails');
+        const emails = await response.json();
+        const emailList = document.getElementById('email-list');
+        emailList.innerHTML = '';
+
+        if (emails.length) {
+          emails.forEach(email => {
+            const emailItem = document.createElement('div');
+            emailItem.className = 'email-item';
+            emailItem.innerHTML = `
+              <h3>From: ${email.from}</h3>
+              <h4>Subject: ${email.subject}</h4>
+              <p><strong>Snippet:</strong> ${email.snippet}</p>
+              <p><strong>Body:</strong></p>
+              <pre>${email.body}</pre>
+            `;
+            emailList.appendChild(emailItem);
+          });
+        } else {
+          emailList.innerHTML = '<p>No emails found.</p>';
+        }
+      } catch (error) {
+        console.error('Error fetching emails:', error);
+        document.getElementById('email-list').innerHTML = '<p>Error fetching emails. Please try again.</p>';
+      }
+    });
+
+    window.addEventListener('load', () => {
+      const fetchEmailsBtn = document.getElementById('fetch-emails-btn');
+      fetchEmailsBtn.disabled = false;
+    });
+  </script>
 </body>
 </html>

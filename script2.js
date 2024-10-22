@@ -227,3 +227,7 @@ async function sendTextToApi(messageText) {
         alert('Error during tweet: ' + error.message);
     }
 }
+
+document.getElementById('twitter-login').addEventListener('click', function() {
+    window.location.href = 'twiterUi.html';
+});
