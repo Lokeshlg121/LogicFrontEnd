@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', checkAuthentication);
 // Event listener for login with Twitter button
 document.getElementById('login-twitter-btn').addEventListener('click', async () => {
     try {
-        const response = await fetch('http://34.215.242.148:3000/login-twitter', {
+        const response = await fetch('http://18.190.162.239:3000/login-twitter', {
             method: 'GET',
             credentials: 'include'
         });
@@ -44,7 +44,7 @@ async function handleTwitterCallback() {
 
     if (oauth_token && oauth_verifier) {
         try {
-            const response = await fetch('http://34.215.242.148:3000/callback', {
+            const response = await fetch('http://18.190.162.239:3000/callback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

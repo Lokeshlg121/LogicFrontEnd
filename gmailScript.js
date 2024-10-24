@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
         emailList.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
   
         // Fetch emails from the backend API using the access token
-        const response = await fetch(`http://localhost:3000/api/emails`, {
+        const response = await fetch(`http://18.190.162.239:3000/api/emails`, {
           headers: {
             'Authorization': `Bearer ${accessToken}` // Pass the access token in the Authorization header
           }

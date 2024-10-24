@@ -129,23 +129,14 @@
                 localStorage.setItem('oauth_token', oauth_token);
                 console.log('OAuth token stored:', oauth_token);
 
-<<<<<<< HEAD
                 // Show the twee    t container if the user is authenticated
                 document.getElementById('tweet-container').style.display = 'block';
-=======
-                if (email) {
-                    // Display the authenticated user's email
-                    document.getElementById('user-info').innerHTML = `<strong>Authenticated as:</strong> ${email}`;
-                } else {
-                    alert('Email not found. Please log in again.');
-                }
->>>>>>> b386d363a020dff48d7452da1fef0b8115cb274d
             }
         });
 
         // Twitter login
         document.getElementById('twitter-login').addEventListener('click', () => {
-            window.open('http://34.215.242.148:3000/auth/twitter', '_blank');
+            window.open('http://18.190.162.239:3000/auth/twitter', '_blank');
         });
 
         // Google login

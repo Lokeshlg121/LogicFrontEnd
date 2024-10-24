@@ -19,13 +19,14 @@ const toggleForms = () => {
 
 // Handle Signup
 signupForm.addEventListener('submit', async (e) => {
+    console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
     e.preventDefault(); // Prevent form from submitting and refreshing the page
 
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
 
     try {
-        const response = await fetch('http://34.215.242.148:3000/signup', { // Replace with your actual signup API URL
+        const response = await fetch('http://18.190.162.239:3000/signup', { // Replace with your actual signup API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,13 +52,14 @@ signupForm.addEventListener('submit', async (e) => {
 
 // Handle Login
 loginForm.addEventListener('submit', async (e) => {
+    console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
     e.preventDefault();
 
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
     try {
-        const response = await fetch('http://34.215.242.148:3000/login', { // Replace with your actual login API URL
+        const response = await fetch('http://18.190.162.239:3000/login', { // Replace with your actual login API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,5 +1,5 @@
 // API endpoint
-const apiEndpoint = 'http://34.215.242.148:3000/getPrompt'; 
+const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -29,7 +29,7 @@ document.getElementById('sidebar-toggle').addEventListener('click', function() {
 document.getElementById('twitter-login').addEventListener('click', async () => {
     try {
         console.log("About to call login API for Twitter");
-        const response = await fetch('http://34.215.242.148:3000/login-twitter', {
+        const response = await fetch('http://18.190.162.239:3000/login-twitter', {
             method: 'GET',
             credentials: 'include'
         });
@@ -56,7 +56,7 @@ async function handleTwitterCallback() {
 
     if (oauth_token && oauth_verifier) {
         try {
-            const response = await fetch('http://34.215.242.148:3000/callback', {
+            const response = await fetch('http://18.190.162.239:3000/callback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -210,7 +210,7 @@ async function sendTextToApi(messageText) {
     const oauth_token = localStorage.getItem('oauth_token');
 
     try {
-        const response = await fetch(`http://34.215.242.148:3000/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
+        const response = await fetch(`http://18.190.162.239:3000/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
             method: 'POST',
             credentials: 'include',
                 headers: {
