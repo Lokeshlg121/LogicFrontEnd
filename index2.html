@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Chat Interface with Twitter OAuth</title>
+    <title>Terminal Chat Interface with Twitter OAuth and Google Authentication</title>
     <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Styles remain the same */
+        /* Sidebar and layout styles */
         .sidebar {
             height: 100vh;
             position: fixed;
@@ -78,6 +78,10 @@
         #pin-container, #tweet-container {
             display: none;
         }
+        .user-info {
+            margin: 20px 0;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -91,8 +95,7 @@
         <div class="sidebar" id="sidebar">
             <ul>
                 <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
-                <li><i class="fab fa-google"></i>Google</li>
-                <!-- <li><i class="fab fa-facebook"></i> Facebook</li> -->
+                <li id="google-login"><i class="fab fa-google"></i> Google</li>
             </ul>
         </div>
 
@@ -101,17 +104,13 @@
             <div class="terminal-header">
                 <h1>TerminalBot</h1>
             </div>
+            <div class="user-info" id="user-info"></div>
             <div class="messages" id="messages"></div>
             <div class="input-container">
                 <span class="prompt">>_</span>
                 <textarea id="user-input" placeholder="Ask me anything..." autofocus autocomplete="off"></textarea>
                 <button id="submit-btn">Submit</button>
             </div>
-            <!-- <div id="tweet-container">
-                <h2>Post a Tweet</h2>
-                <input type="text" id="tweet" placeholder="Write your tweet here">
-                <button id="tweet-btn">Tweet</button>
-            </div> -->
         </div>
     </div>
 
@@ -120,59 +119,48 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
     <script>
-        // Handle OAuth token from URL and store in local storage
+        // Handle OAuth token and user info from URL and store in local storage
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const oauth_token = params.get('oauth_token');
+            const email = params.get('email'); // Assuming email is also passed in the URL
 
             if (oauth_token) {
-                // Store the OAuth token in local storage for later use
                 localStorage.setItem('oauth_token', oauth_token);
                 console.log('OAuth token stored:', oauth_token);
 
+<<<<<<< HEAD
                 // Show the twee    t container if the user is authenticated
                 document.getElementById('tweet-container').style.display = 'block';
+=======
+                if (email) {
+                    // Display the authenticated user's email
+                    document.getElementById('user-info').innerHTML = `<strong>Authenticated as:</strong> ${email}`;
+                } else {
+                    alert('Email not found. Please log in again.');
+                }
+>>>>>>> b386d363a020dff48d7452da1fef0b8115cb274d
             }
-            //  else {
-            //     alert('OAuth token missing. Please log in again.');
-            //     window.location.href = 'twiterUi.html'; // Redirect to login page if no token
-            // }
         });
 
-        // Add event listener for tweet button
-        document.getElementById('tweet-btn').addEventListener('click', async () => {
-            const tweet = document.getElementById('tweet').value.trim();
-            const oauth_token = localStorage.getItem('oauth_token');
+        // Twitter login
+        document.getElementById('twitter-login').addEventListener('click', () => {
+            window.open('http://34.215.242.148:3000/auth/twitter', '_blank');
+        });
 
-            if (!oauth_token) {
-                alert('You need to log in with Twitter first.');
-                return;
-            }
+        // Google login
+        document.getElementById('google-login').addEventListener('click', () => {
+            window.open('gmailUi.html', '_blank');
+        });
 
-            if (!tweet) {
-                alert('Please enter a tweet.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`http://34.215.242.148:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${encodeURIComponent(oauth_token)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    alert('Tweet posted successfully:');
-                    document.getElementById('tweet').value = ''; // Clear the tweet input after posting
-                } else {
-                    alert('Connect your Twitter account through the application.');
-                }
-            } catch (error) {
-                console.error('Error during tweet:', error);
-                alert('Error during tweet: ' + error.message);
+        // Submit button functionality
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput) {
+                // Handle the submission logic
+                console.log('User input:', userInput);
+                document.getElementById('messages').innerHTML += `<div>${userInput}</div>`;
+                document.getElementById('user-input').value = '';
             }
         });
     </script>
