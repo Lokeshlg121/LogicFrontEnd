@@ -19,7 +19,7 @@ const toggleForms = () => {
 
 // Handle Signup
 signupForm.addEventListener('submit', async (e) => {
-    console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
+    // console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
     e.preventDefault(); // Prevent form from submitting and refreshing the page
 
     const email = document.getElementById('signup-email').value;
@@ -52,7 +52,7 @@ signupForm.addEventListener('submit', async (e) => {
 
 // Handle Login
 loginForm.addEventListener('submit', async (e) => {
-    console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
+    // console.log("processprocess.envprocess.envprocess.envprocess.env",process.env);
     e.preventDefault();
 
     const email = document.getElementById('login-email').value;
