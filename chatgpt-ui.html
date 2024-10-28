@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT API Application</title>
+    <link rel="stylesheet" href="chatgpt-ui.css"> <!-- Link to a separate CSS file if needed -->
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Password" required>
+        <button id="register-btn">Register</button>
+        
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button id="login-btn">Login</button>
+
+        <h2>ChatGPT</h2>
+        <input type="text" id="chat-prompt" placeholder="Enter your prompt" required>
+        <button id="chat-btn">Send</button>
+
+        <div id="response" style="margin-top: 20px;"></div>
+    </div>
+
+    <script src="chatgpt-ui.js"></script> <!-- Link to the JavaScript file -->
+</body>
+</html>
