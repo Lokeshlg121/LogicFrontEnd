@@ -161,8 +161,8 @@
 <body>
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
-        <h4>Please enter some text</h4>
-        <input type="text" id="popup-input" placeholder="Enter something..." />
+        <h4>Please enter Chatgpt Key</h4>
+        <input type="text" id="popup-input" placeholder="Enter Key Here" />
         <button id="popup-submit" onclick="updateKey()">Submit</button>
     </div>
     <div class="app-wrapper" id="app-wrapper">
@@ -175,7 +175,7 @@
         <div class="sidebar" id="sidebar">
             <ul>
                 <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
-                <li><i class="fab fa-google"></i>Google</li>
+                <li id="google-login"><i class="fab fa-google"></i>Google</li>
                 <!-- <li><i class="fab fa-facebook"></i> Facebook</li> -->
             </ul>
         </div>
@@ -204,12 +204,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
     <script>
+        const apiUrl2 = 'http://localhost:3000'
         // Handle OAuth token from URL and store in local storage
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("before function call")
+            checkKeyStatus();
             const popup = document.getElementById('popup');
             const popupOverlay = document.getElementById('popup-overlay');
             popup.style.display = 'block';
-            popupOverlay.style.display = 'block';
+                popupOverlay.style.display = 'block';
         });
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
@@ -265,6 +268,56 @@
                 alert('Error during tweet: ' + error.message);
             }
         });
-    </script>
+        async function checkKeyStatus() {
+        try {
+            // POST request to check key status
+            const response = await fetch(`${apiUrl2}/getUserDetails`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({email: localStorage.getItem('userEmail') || 'default@example.com'})
+            });
+            const data = await response.json();
+            console.log("datadatadatadatadatadatadata",data);
+
+            if (data.success) {
+                // Hide popup if API returns success
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("popup").style.display = "none";
+            } else {
+                     const popup = document.getElementById('popup');
+                     const popupOverlay = document.getElementById('popup-overlay');
+                     popup.style.display = 'block';
+                     popupOverlay.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Error checking key status:", error);
+            // Show popup on error as a fallback
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+        }
+    }
+    document.getElementById('twitter-login').addEventListener('click', () => {
+            window.open('http://18.190.162.239:3000/auth/twitter', '_blank');
+        });
+
+        // Google login
+        document.getElementById('google-login').addEventListener('click', () => {
+            console.log("hiiiii")
+            window.open('gmailUi.html', '_blank');
+        });
+
+        // Submit button functionality
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput) {
+                // Handle the submission logic
+                console.log('User input:', userInput);
+                document.getElementById('messages').innerHTML += `<div>${userInput}</div>`;
+                document.getElementById('user-input').value = '';
+            }
+        });
+   </script>
 </body>
 </html>

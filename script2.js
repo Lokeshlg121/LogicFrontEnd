@@ -256,8 +256,9 @@ document.getElementById('twitter-login').addEventListener('click', function() {
     window.location.href = 'twiterUi.html';
 });
 
-document.getElementById('twitter-login').addEventListener('click', function() {
-    window.location.href = 'chatgpt-login.html';
+document.getElementById('google-login').addEventListener('click', () => {
+    console.log("hiiiii")
+    window.open('gmailUi.html', '_blank');
 });
 
 document.getElementById('popup-submit').addEventListener('click', () => {
@@ -320,5 +321,28 @@ function updateKey(){
     } else {
         console.error('Input text or email is missing.');
     }
+}
+
+function checkKeyStatus() {
+    // Example API call using fetch
+    fetch("https://example.com/api/check-key-status")
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Hide popup if API returns success
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("popup").style.display = "none";
+            } else {
+                // Show popup if API returns false
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("popup").style.display = "block";
+            }
+        })
+        .catch(error => {
+            console.error("Error checking key status:", error);
+            // Optionally, handle errors by showing the popup
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+        });
 }
 
