@@ -1,3 +1,4 @@
+const apiUrl = 'http://localhost:3000'
 const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const chatContainer = document.getElementById('chat-container');
@@ -26,7 +27,7 @@ signupForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('signup-password').value;
 
     try {
-        const response = await fetch('http://18.190.162.239:3000/signup', { // Replace with your actual signup API URL
+        const response = await fetch(`${apiUrl}/signup`, { // Replace with your actual signup API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +60,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('login-password').value;
 
     try {
-        const response = await fetch('http://18.190.162.239:3000/login', { // Replace with your actual login API URL
+        const response = await fetch(`${apiUrl}/login`, { // Replace with your actual login API URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

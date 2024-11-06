@@ -3,28 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT API Application</title>
-    <link rel="stylesheet" href="chatgpt-ui.css"> <!-- Link to a separate CSS file if needed -->
+    <title>OpenAI API Key and Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input, button, textarea {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            font-size: 16px;
+        }
+        #successMessage {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Register</h2>
-        <input type="email" id="register-email" placeholder="Email" required>
-        <input type="password" id="register-password" placeholder="Password" required>
-        <button id="register-btn">Register</button>
-        
-        <h2>Login</h2>
-        <input type="email" id="login-email" placeholder="Email" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button id="login-btn">Login</button>
 
-        <h2>ChatGPT</h2>
-        <input type="text" id="chat-prompt" placeholder="Enter your prompt" required>
-        <button id="chat-btn">Send</button>
+    <h2>Enter Your OpenAI API Key</h2>
+    <input type="password" id="apiKeyInput" placeholder="Enter API Key">
+    <button onclick="saveApiKey()">Save API Key</button>
+    <div id="successMessage"></div>
 
-        <div id="response" style="margin-top: 20px;"></div>
-    </div>
+    <h3>Chat with OpenAI</h3>
+    <textarea id="userMessage" placeholder="Type your message here..."></textarea>
+    <button onclick="sendMessage()">Send Message</button>
 
-    <script src="chatgpt-ui.js"></script> <!-- Link to the JavaScript file -->
+    <div id="responseMessage"></div>
+
+    <script src="chatgpt.js"></script>
 </body>
 </html>

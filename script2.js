@@ -1,12 +1,13 @@
 // API endpoint
-const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
+// const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
+const apiEndpoint = 'http://localhost:3000/getPrompt'; 
+const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
 
 // To prevent multiple submissions
 let isSubmitting = false;
-
 // Handle user input with Enter key
 userInput.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter' && !e.shiftKey && userInput.value.trim()) {
@@ -114,8 +115,14 @@ async function handleUserInput() {
     try {
         const response = await callChatGPTApi(question);
         console.log('API Response:', response);
-        displayApiResponse(response);
+        if(response.statusCode == 400){
+            alert('Please enter a valid ChatGPT ID.')
+            return;
+        }else{
+            displayApiResponse(response);
+        }
     } catch (error) {
+        alert('Enter valid id of chatgpt');
         appendMessage('Error: Unable to get response from the server.', 'bot-message');
     } finally {
         isSubmitting = false;
@@ -166,11 +173,14 @@ async function callChatGPTApi(question) {
             userId: email
         }),
     });
-
+    console.log("responseresponseresponse",response);
     if (!response.ok) {
         throw new Error('API request failed');
     }
-
+    if(response.statusCode === 400){
+        console.log("inside ifffffffff of styatus")
+        alert(response.message)
+    }
     const data = await response.json();
     return data;
 }
@@ -245,3 +255,70 @@ async function sendTextToApi(messageText) {
 document.getElementById('twitter-login').addEventListener('click', function() {
     window.location.href = 'twiterUi.html';
 });
+
+document.getElementById('twitter-login').addEventListener('click', function() {
+    window.location.href = 'chatgpt-login.html';
+});
+
+document.getElementById('popup-submit').addEventListener('click', () => {
+    const inputText = document.getElementById('popup-input').value;
+    const email = localStorage.getItem('userEmail'); // Retrieve email from localStorage
+
+    if (inputText && email) {
+        // Call your API here with the input data and email
+        fetch(`${apiUrl}/insertChatGptKey`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ chatGptKey: inputText, email: email }), // Pass both inputText and email
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('API response:', data);
+            console.log("data.statusCodedata.statusCodedata.statusCode",data.statusCode);
+            if(data.statusCode ===400){
+                alert('Enter valid chast gpt id')
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        // Close the popup after submitting
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('popup-overlay').style.display = 'none';
+    } else {
+        console.error('Input text or email is missing.');
+    }
+});
+
+function updateKey(){
+    const inputText = document.getElementById('popup-input').value;
+    const email = localStorage.getItem('userEmail'); // Retrieve email from localStorage
+
+    if (inputText && email) {
+        // Call your API here with the input data and email
+        fetch(`${apiUrl}/insertChatGptKey`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ chatGptKey: inputText, email: email }), // Pass both inputText and email
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('API response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        // Close the popup after submitting
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('popup-overlay').style.display = 'none';
+    } else {
+        console.error('Input text or email is missing.');
+    }
+}
+
