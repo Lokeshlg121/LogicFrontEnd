@@ -1,3 +1,4 @@
+const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 // Check if user is already authenticated
 function checkAuthentication() {
     const oauth_token = localStorage.getItem('oauth_token');
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', checkAuthentication);
 // Event listener for login with Twitter button
 document.getElementById('login-twitter-btn').addEventListener('click', async () => {
     try {
-        const response = await fetch('http://18.190.162.239:3000/login-twitter', {
+        const response = await fetch(`${apiUrl}/login-twitter`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -44,7 +45,7 @@ async function handleTwitterCallback() {
 
     if (oauth_token && oauth_verifier) {
         try {
-            const response = await fetch('http://18.190.162.239:3000/callback', {
+            const response = await fetch('https://backendlogictech.cloudbyvin.com/callback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

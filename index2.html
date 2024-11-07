@@ -121,14 +121,17 @@
         }
 
         #user-input {
-            flex: 1;
-            pointer-events: auto;
-            padding: 5px;
-            border-radius: 5px;
-            resize: none;
-            min-height: 40px;
-            overflow-y: hidden;
-        }
+    flex: 1;
+    pointer-events: auto;
+    padding: 5px;
+    border-radius: 5px;
+    resize: none;
+    min-height: 40px;
+    overflow-y: auto;
+    background-color: #fff; /* Ensures text area is visible */
+    color: #000; /* Ensures the text color is visible */
+}
+
 
         #pin-container, #tweet-container {
             display: none;
@@ -169,8 +172,10 @@
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
         <h4>Please enter ChatGPT Key</h4>
-        <input type="text" id="popup-input" placeholder="Enter Key Here" />
-        <button id="popup-submit" onclick="updateKey()">Submit</button>
+        <!-- <input type="text" id="popup-input" placeholder="Enter Key Here" /> -->
+        <input type="password" id="popup-input" placeholder="Enter Password Here" required />
+        <button id="popup-submit">Submit</button>
+        <button id="popup-cancel">Cancel</button>
     </div>
     <!-- "Connect ChatGPT" Button -->
     <button id="connect-chatgpt-btn">Connect ChatGPT</button>

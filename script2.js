@@ -31,7 +31,7 @@ document.getElementById('sidebar-toggle').addEventListener('click', function() {
 document.getElementById('twitter-login').addEventListener('click', async () => {
     try {
         console.log("About to call login API for Twitter");
-        const response = await fetch('http://18.190.162.239:3000/login-twitter', {
+        const response = await fetch(`${apiUrl}/login-twitter`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -58,7 +58,7 @@ async function handleTwitterCallback() {
 
     if (oauth_token && oauth_verifier) {
         try {
-            const response = await fetch('http://18.190.162.239:3000/callback', {
+            const response = await fetch('https://backendlogictech.cloudbyvin.com/callback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -221,7 +221,7 @@ async function sendTextToApi(messageText) {
     const oauth_token = localStorage.getItem('oauth_token');
 
     try {
-        const response = await fetch(`http://18.190.162.239:3000/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
+        const response = await fetch(`https://backendlogictech.cloudbyvin.com/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
             method: 'POST',
             credentials: 'include',
                 headers: {
@@ -280,14 +280,15 @@ document.getElementById('popup-submit').addEventListener('click', () => {
             console.log('API response:', data);
             console.log("data.statusCodedata.statusCodedata.statusCode",data.statusCode);
             if(data.statusCode ===400){
-                alert('Enter valid chast gpt id')
+                alert('Enter valid chast gpt id')                
+        // Close the popup after submitting
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('popup-overlay').style.display = 'none';
             }
         })
         .catch(error => {
             console.error('Error:', error);
         });
-
-        // Close the popup after submitting
         document.getElementById('popup').style.display = 'none';
         document.getElementById('popup-overlay').style.display = 'none';
     } else {
@@ -356,3 +357,8 @@ function showPopup() {
 
 // Event listener for the "Connect ChatGPT" button
 document.getElementById("connect-chatgpt-btn").addEventListener("click", showPopup);
+
+
+document.getElementById('popup-cancel').addEventListener('click', () => {
+    document.getElementById("popup").style.display = "none";
+});
