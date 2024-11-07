@@ -1,7 +1,7 @@
 // API endpoint
-// const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
-const apiEndpoint = 'http://localhost:3000/getPrompt'; 
-const apiUrl = 'http://localhost:3000'
+const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
+// const apiEndpoint = 'http://localhost:3000/getPrompt'; 
+const apiUrl = 'http://18.190.162.239:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -346,3 +346,12 @@ function checkKeyStatus() {
         });
 }
 
+
+// Function to show the popup
+function showPopup() {
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").style.display = "block";
+}
+
+// Event listener for the "Connect ChatGPT" button
+document.getElementById("connect-chatgpt-btn").addEventListener("click", showPopup);

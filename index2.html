@@ -15,24 +15,24 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #000; /* Black color */
-            color: #fff; /* White text color */
-            padding: 30px; /* Increased padding */
+            background-color: #000;
+            color: #fff;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            width: 300px; /* Increased width */
-            height: 170px; /* Increased height */
+            width: 300px;
+            height: 170px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center; /* Centers the text */
+            text-align: center;
         }
 
         /* Center input box */
         .popup input {
-            width: 80%; /* Adjust input width */
+            width: 80%;
             padding: 10px;
             margin-top: 20px;
             border-radius: 5px;
@@ -122,6 +122,7 @@
 
         #user-input {
             flex: 1;
+            pointer-events: auto;
             padding: 5px;
             border-radius: 5px;
             resize: none;
@@ -131,11 +132,6 @@
 
         #pin-container, #tweet-container {
             display: none;
-        }
-
-        .user-info {
-            margin: 20px 0;
-            color: #fff;
         }
 
         /* Overlay */
@@ -153,18 +149,32 @@
         .overlay.show {
             display: block;
         }
-        .popup button:active {
-    background-color: #222; /* Darker shade when clicked */
-}
+
+        /* "Connect ChatGPT" button */
+        #connect-chatgpt-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1100;
+        }
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
-        <h4>Please enter Chatgpt Key</h4>
+        <h4>Please enter ChatGPT Key</h4>
         <input type="text" id="popup-input" placeholder="Enter Key Here" />
         <button id="popup-submit" onclick="updateKey()">Submit</button>
     </div>
+    <!-- "Connect ChatGPT" Button -->
+    <button id="connect-chatgpt-btn">Connect ChatGPT</button>
+    
     <div class="app-wrapper" id="app-wrapper">
         <!-- Sidebar Toggle Button -->
         <div class="sidebar-toggle" id="sidebar-toggle">
@@ -176,7 +186,6 @@
             <ul>
                 <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
                 <li id="google-login"><i class="fab fa-google"></i>Google</li>
-                <!-- <li><i class="fab fa-facebook"></i> Facebook</li> -->
             </ul>
         </div>
 
@@ -188,14 +197,9 @@
             <div class="messages" id="messages"></div>
             <div class="input-container">
                 <span class="prompt">>_</span>
-                <textarea id="user-input" placeholder="Ask me anything..." autofocus autocomplete="off"></textarea>
+                <textarea id="user-input" placeholder="Ask me anything..."></textarea>
                 <button id="submit-btn">Submit</button>
             </div>
-            <!-- <div id="tweet-container">
-                <h2>Post a Tweet</h2>
-                <input type="text" id="tweet" placeholder="Write your tweet here">
-                <button id="tweet-btn">Tweet</button>
-            </div> -->
         </div>
     </div>
 
@@ -204,120 +208,45 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
     <script>
-        const apiUrl2 = 'http://localhost:3000'
+        const apiUrl2 = 'http://localhost:3000';
+
         // Handle OAuth token from URL and store in local storage
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("before function call")
             checkKeyStatus();
-            const popup = document.getElementById('popup');
-            const popupOverlay = document.getElementById('popup-overlay');
-            popup.style.display = 'block';
-                popupOverlay.style.display = 'block';
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const oauth_token = params.get('oauth_token');
-
-            if (oauth_token) {
-                // Store the OAuth token in local storage for later use
-                localStorage.setItem('oauth_token', oauth_token);
-                console.log('OAuth token stored:', oauth_token);
-
-                // Show the twee    t container if the user is authenticated
-                document.getElementById('tweet-container').style.display = 'block';
-            }
-            //  else {
-            //     alert('OAuth token missing. Please log in again.');
-            //     window.location.href = 'twiterUi.html'; // Redirect to login page if no token
-            // }
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
         });
 
-        // Add event listener for tweet button
-        document.getElementById('tweet-btn').addEventListener('click', async () => {
-            const tweet = document.getElementById('tweet').value.trim();
-            const oauth_token = localStorage.getItem('oauth_token');
+        // Event listener for "Connect ChatGPT" button
+        document.getElementById('connect-chatgpt-btn').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        });
 
-            if (!oauth_token) {
-                alert('You need to log in with Twitter first.');
-                return;
-            }
-
-            if (!tweet) {
-                alert('Please enter a tweet.');
-                return;
-            }
-
+        async function checkKeyStatus() {
             try {
-                const response = await fetch(`http://34.215.242.148:3000/tweet?status=${encodeURIComponent(tweet)}&oauth_token=${encodeURIComponent(oauth_token)}`, {
-                    method: 'GET',
+                const response = await fetch(`${apiUrl2}/getUserDetails`, {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
-                    credentials: 'include'
+                    body: JSON.stringify({email: localStorage.getItem('userEmail') || 'default@example.com'})
                 });
-
                 const data = await response.json();
-                if (response.ok) {
-                    alert('Tweet posted successfully:');
-                    document.getElementById('tweet').value = ''; // Clear the tweet input after posting
+
+                if (data.success) {
+                    document.getElementById("overlay").style.display = "none";
+                    document.getElementById("popup").style.display = "none";
                 } else {
-                    alert('Connect your Twitter account through the application.');
+                    document.getElementById("popup").style.display = 'block';
+                    document.getElementById("overlay").style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error during tweet:', error);
-                alert('Error during tweet: ' + error.message);
+                console.error("Error checking key status:", error);
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("popup").style.display = "block";
             }
-        });
-        async function checkKeyStatus() {
-        try {
-            // POST request to check key status
-            const response = await fetch(`${apiUrl2}/getUserDetails`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({email: localStorage.getItem('userEmail') || 'default@example.com'})
-            });
-            const data = await response.json();
-            console.log("datadatadatadatadatadatadata",data);
-
-            if (data.success) {
-                // Hide popup if API returns success
-                document.getElementById("overlay").style.display = "none";
-                document.getElementById("popup").style.display = "none";
-            } else {
-                     const popup = document.getElementById('popup');
-                     const popupOverlay = document.getElementById('popup-overlay');
-                     popup.style.display = 'block';
-                     popupOverlay.style.display = 'block';
-            }
-        } catch (error) {
-            console.error("Error checking key status:", error);
-            // Show popup on error as a fallback
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("popup").style.display = "block";
         }
-    }
-    document.getElementById('twitter-login').addEventListener('click', () => {
-            window.open('http://18.190.162.239:3000/auth/twitter', '_blank');
-        });
-
-        // Google login
-        document.getElementById('google-login').addEventListener('click', () => {
-            console.log("hiiiii")
-            window.open('gmailUi.html', '_blank');
-        });
-
-        // Submit button functionality
-        document.getElementById('submit-btn').addEventListener('click', () => {
-            const userInput = document.getElementById('user-input').value;
-            if (userInput) {
-                // Handle the submission logic
-                console.log('User input:', userInput);
-                document.getElementById('messages').innerHTML += `<div>${userInput}</div>`;
-                document.getElementById('user-input').value = '';
-            }
-        });
-   </script>
+    </script>
 </body>
 </html>

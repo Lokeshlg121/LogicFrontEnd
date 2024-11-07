@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:3000'
+const apiUrl = 'http://18.190.162.239:3000'
 const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const chatContainer = document.getElementById('chat-container');
