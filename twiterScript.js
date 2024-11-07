@@ -40,9 +40,10 @@ document.getElementById('login-twitter-btn').addEventListener('click', async () 
 // Function to handle the callback from Twitter and store tokens
 async function handleTwitterCallback() {
     const params = new URLSearchParams(window.location.search);
+    console.log("URL of the twiiter callback");
     const oauth_token = params.get('oauth_token');
     const oauth_verifier = params.get('oauth_verifier');
-
+    console.log("oauth_token",oauth_token,"sdsd",oauth_verifier)
     if (oauth_token && oauth_verifier) {
         try {
             const response = await fetch('https://backendlogictech.cloudbyvin.com/callback', {
@@ -59,7 +60,8 @@ async function handleTwitterCallback() {
                 // Store tokens in local storage
                 localStorage.setItem('oauth_token', data.access_token);
                 localStorage.setItem('oauth_verifier', oauth_verifier);
-
+                alert("hey boy",data.access_token);
+                // console.log()
                 document.getElementById('tweet-container').style.display = 'block';
                 document.getElementById('login-twitter-btn').style.display = 'none';
 

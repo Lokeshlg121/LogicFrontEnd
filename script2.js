@@ -218,9 +218,11 @@ function displayApiResponse(apiResponse) {
 
 // Send the message text to Twitter API for posting as a tweet
 async function sendTextToApi(messageText) {
-    const oauth_token = localStorage.getItem('oauth_token');
-
+   
     try {
+        const oauth_token = localStorage.getItem('oauth_token');
+        console.log("inside function")
+        console.log("localStorage.getItem('oauth_token');",localStorage.getItem('oauth_token'));    
         const response = await fetch(`https://backendlogictech.cloudbyvin.com/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
             method: 'POST',
             credentials: 'include',
@@ -229,7 +231,7 @@ async function sendTextToApi(messageText) {
             },
             body: JSON.stringify({
                 status: messageText,
-                // oauth_token: oauth_token
+                oauth_token: oauth_token
             }),
         });
         // const response = await fetch('http://35.94.170.31:3000/postTweet', {  // Replace with your actual API endpoint
