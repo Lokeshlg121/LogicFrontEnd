@@ -1,7 +1,8 @@
 // API endpoint
-const apiEndpoint = 'http://18.190.162.239:3000/getPrompt'; 
+const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
 // const apiEndpoint = 'http://localhost:3000/getPrompt'; 
-const apiUrl = 'http://18.190.162.239:3000'
+const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+// const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');

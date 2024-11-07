@@ -1,3 +1,4 @@
+const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 function saveApiKey() {
     const apiKey = document.getElementById("apiKeyInput").value;
     if (apiKey) {
@@ -27,7 +28,7 @@ async function sendMessage() {
     }
 
     try {
-        const response = await fetch("http://localhost:3000/chat", {
+        const response = await fetch(`${apiUrl}/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
