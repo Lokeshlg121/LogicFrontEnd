@@ -298,6 +298,7 @@ document.getElementById('popup-submit').addEventListener('click', () => {
         // document.getElementById('popup').style.display = 'none';
         // document.getElementById('popup-overlay').style.display = 'none';
         //     }
+        location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -333,6 +334,7 @@ function updateKey(){
         // Close the popup after submitting
         document.getElementById('popup').style.display = 'none';
         document.getElementById('popup-overlay').style.display = 'none';
+        location.reload();
     } else {
         console.error('Input text or email is missing.');
     }
