@@ -447,20 +447,21 @@ async function fetchHistoryData() {
         }
 
         const data = await response.json();
-
-        // Assuming 'data' is an array you want to map over
-        // const historyItems = data.map(item => item.description); // Example of mapping the array to get descriptions
-
-        // Now call addHistoryItems with the mapped data
-        // alert(data.uniqueData);
         addHistoryItems(data.uniqueData);
     } catch (error) {
         // alert(error);
         console.error("Error fetching history data:", error);
     }
 }
-function handleChatItemClick(item) {
+async function handleChatItemClick(item) {
     alert(`You clicked on: ${item.content}`);
+    const response = await fetch(`${apiUrl}/getChatDetails?email=${encodeURIComponent(item.pageId)}`);
+        
+    if (!response.ok) {
+        throw new Error("Failed to fetch data");
+    }
+
+    const data = await response.json();
     messagesDiv.innerHTML = item.content;
 }
 fetchHistoryData() ;
