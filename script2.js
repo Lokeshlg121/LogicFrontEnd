@@ -1,5 +1,5 @@
 // API endpoint
-// const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
+const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
 // const apiEndpoint = 'http://localhost:3000/getPrompt'; 
 const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 // const apiUrl = 'http://localhost:3000'
@@ -125,6 +125,7 @@ async function handleUserInput() {
             displayApiResponse(response);
         }
     } catch (error) {
+        console.log("error ",error)
         alert('Enter valid id of chatgpt');
         appendMessage('Error: Unable to get response from the server.', 'bot-message');
     } finally {
@@ -287,19 +288,22 @@ document.getElementById('popup-submit').addEventListener('click', () => {
         .then(response => response.json())
         .then(data => {
             console.log('API response:', data);
-            console.log("data.statusCodedata.statusCodedata.statusCode",data.statusCode);
-            if(data.statusCode ===400){
-                alert('Enter valid chast gpt id')                
-        // Close the popup after submitting
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('popup-overlay').style.display = 'none';
-            }
+            document.getElementById('popup') ? document.getElementById('popup').remove() : '';
+            document.getElementById('popup-overlay') ? document.getElementById('popup-overlay').remove(): '';
+           
+            console.log("data.statusCodedata.statusCodedata.statusCode",data);
+        //     if(data.statusCode ===400){
+        //         alert('Enter valid chast gpt id')                
+        // // Close the popup after submitting
+        // document.getElementById('popup').style.display = 'none';
+        // document.getElementById('popup-overlay').style.display = 'none';
+        //     }
         })
         .catch(error => {
             console.error('Error:', error);
         });
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('popup-overlay').style.display = 'none';
+        document.getElementById('popup') ? document.getElementById('popup').remove() : '';
+        document.getElementById('popup-overlay') ? document.getElementById('popup-overlay').remove(): '';
     } else {
         console.error('Input text or email is missing.');
     }
@@ -408,7 +412,7 @@ document.getElementById('popup-cancel').addEventListener('click', () => {
 // addHistoryItems(arr); // 
 
 function addHistoryItems(count) {
-    alert(count);
+    // alert(count);
     const historyList = document.getElementById("historyBar");
     // Clear any existing items
     historyList.innerHTML = "";
@@ -454,15 +458,29 @@ async function fetchHistoryData() {
     }
 }
 async function handleChatItemClick(item) {
-    alert(`You clicked on: ${item.content}`);
-    const response = await fetch(`${apiUrl}/getChatDetails?email=${encodeURIComponent(item.pageId)}`);
+    // alert(`You clicked on: ${item.content}`);
+    const response = await fetch(`${apiUrl}/getChatDetails?pageId=${encodeURIComponent(item.pageId)}`);
         
     if (!response.ok) {
         throw new Error("Failed to fetch data");
     }
 
     const data = await response.json();
-    messagesDiv.innerHTML = item.content;
+    // console.log('data',data)
+    data.uniqueData.map((convo)=>{
+        // if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
+            // apiResponse.conversation.forEach(convo => {
+                if (convo.role === 'user') {
+                    appendMessage('> ' + convo.content, 'user-message');
+                } else if (convo.role === 'assistant') {
+                    appendMessage(convo.content, 'bot-message');
+                }
+            // });
+        // } else {
+        //     // Add the main response message to the chat if no conversation array is present
+        //     appendMessage(apiResponse.response, 'bot-message');
+        // }
+        })
 }
 fetchHistoryData() ;
 
