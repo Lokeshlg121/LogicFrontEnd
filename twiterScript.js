@@ -1,4 +1,5 @@
-const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+// const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+const apiUrl = 'http://localhost:3000'
 // Check if user is already authenticated
 function checkAuthentication() {
     const oauth_token = localStorage.getItem('oauth_token');
@@ -40,7 +41,7 @@ document.getElementById('login-twitter-btn').addEventListener('click', async () 
 // Function to handle the callback from Twitter and store tokens
 async function handleTwitterCallback() {
     const params = new URLSearchParams(window.location.search);
-    console.log("URL of the twiiter callback");
+    console.log("URL of the twiiter callback",window.location);
     const oauth_token = params.get('oauth_token');
     const oauth_verifier = params.get('oauth_verifier');
     console.log("oauth_token",oauth_token,"sdsd",oauth_verifier)

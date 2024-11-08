@@ -1,8 +1,8 @@
 // API endpoint
-const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
+// const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
 // const apiEndpoint = 'http://localhost:3000/getPrompt'; 
-const apiUrl = 'https://backendlogictech.cloudbyvin.com'
-// const apiUrl = 'http://localhost:3000'
+// const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -53,12 +53,13 @@ document.getElementById('twitter-login').addEventListener('click', async () => {
 // Handle Twitter callback and redirect to success page
 async function handleTwitterCallback() {
     const params = new URLSearchParams(window.location.search);
+    console.log("window.locationwindow.location",window.location);
     const oauth_token = params.get('oauth_token');
     const oauth_verifier = params.get('oauth_verifier');
 
-    if (oauth_token && oauth_verifier) {
+    if (oauth_token) {
         try {
-            const response = await fetch('https://backendlogictech.cloudbyvin.com/callback', {
+            const response = await fetch(`${apiUrl}/callback`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -220,10 +221,14 @@ function displayApiResponse(apiResponse) {
 async function sendTextToApi(messageText) {
    
     try {
-        const oauth_token = localStorage.getItem('oauth_token');
+        const params = new URLSearchParams(window.location.search);
+        console.log("window.locationwindow.location",window.location);
+        const oauth_token2 = params.get('oauth_token');
+        console.log("oauth_token2oauth_token2oauth_token2oauth_token2oauth_token2",oauth_token2);
+        const oauth_token = localStorage.getItem('oauth_token') || oauth_token2;
         console.log("inside function")
         console.log("localStorage.getItem('oauth_token');",localStorage.getItem('oauth_token'));    
-        const response = await fetch(`https://backendlogictech.cloudbyvin.com/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
+        const response = await fetch(`${apiUrl}/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
             method: 'POST',
             credentials: 'include',
                 headers: {
