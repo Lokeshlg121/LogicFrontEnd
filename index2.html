@@ -166,45 +166,126 @@
             cursor: pointer;
             z-index: 1100;
         }
+        #historyBar-toggle {
+            position: fixed;
+            top: 60px; /* Positioned below the Connect ChatGPT button */
+            right: 20px;
+            z-index: 1100;
+            background: #343a40;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* History Bar styles */
+        .historyBar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px;
+            background: #343a40;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%); /* Hidden initially */
+            z-index: 1000;
+        }
+
+        .historyBar.active {
+            transform: translateX(0); /* Show when active */
+        }
+
+        .historyBar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .historyBar ul li {
+            padding: 15px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .historyBar ul li i {
+            margin-right: 10px;
+        }
+        .custom-history-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-history-item i.fas.fa-history {
+    margin-right: 10px;
+    color: #007bff; /* Icon color */
+}
+
+.custom-history-item:hover {
+    background-color: #e2e2e2;
+}
+
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
         <h4>Please enter ChatGPT Key</h4>
-        <!-- <input type="text" id="popup-input" placeholder="Enter Key Here" /> -->
         <input type="password" id="popup-input" placeholder="Enter Password Here" required />
         <button id="popup-submit">Submit</button>
         <button id="popup-cancel">Cancel</button>
     </div>
+
     <!-- "Connect ChatGPT" Button -->
     <button id="connect-chatgpt-btn">Connect ChatGPT</button>
     
-    <div class="app-wrapper" id="app-wrapper">
-        <!-- Sidebar Toggle Button -->
-        <div class="sidebar-toggle" id="sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </div>
+    <!-- History Bar Toggle Button -->
+    <div id="historyBar-toggle">History</div>
 
-        <!-- Sidebar Section -->
-        <div class="sidebar" id="sidebar">
-            <ul>
-                <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
-                <li id="google-login"><i class="fab fa-google"></i>Google</li>
-            </ul>
-        </div>
+    <!-- Sidebar Toggle Button -->
+    <div class="sidebar-toggle" id="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
 
-        <!-- Terminal Container -->
-        <div class="terminal-container" id="app-container">
-            <div class="terminal-header">
-                <h1>TerminalBot</h1>
-            </div>
-            <div class="messages" id="messages"></div>
-            <div class="input-container">
-                <span class="prompt">>_</span>
-                <textarea id="user-input" placeholder="Ask me anything..."></textarea>
-                <button id="submit-btn">Submit</button>
-            </div>
+    <!-- Sidebar Section -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li></li>
+            <!-- <li></li> -->
+            <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
+            <li id="google-login"><i class="fab fa-google"></i>Google</li>
+        </ul>
+    </div>
+
+    <!-- History Bar Section -->
+    <div class="historyBar" id="historyBar">
+        <ul>
+            <!-- <li></li>
+            <li></li>
+            <li></li>
+            <li id="history-item-1"><i class="fas fa-history"></i> History Item 1</li>
+            <li id="history-item-2"><i class="fas fa-history"></i> History Item 2</li>
+            <li id="history-item-3"><i class="fas fa-history"></i> History Item 3</li> -->
+        </ul>
+    </div>
+
+    <!-- Terminal Container -->
+    <div class="terminal-container" id="app-container">
+        <div class="terminal-header">
+            <h1>TerminalBot</h1>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <span class="prompt">>_</span>
+            <textarea id="user-input" placeholder="Ask me anything..."></textarea>
+            <button id="submit-btn">Submit</button>
         </div>
     </div>
 
@@ -226,6 +307,11 @@
         document.getElementById('connect-chatgpt-btn').addEventListener('click', () => {
             document.getElementById('popup').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+        });
+
+        // Event listener for history bar toggle
+        document.getElementById('historyBar-toggle').addEventListener('click', () => {
+            document.getElementById('historyBar').classList.toggle('active');
         });
 
         async function checkKeyStatus() {

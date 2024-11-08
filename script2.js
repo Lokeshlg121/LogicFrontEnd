@@ -1,8 +1,8 @@
 // API endpoint
 // const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
 // const apiEndpoint = 'http://localhost:3000/getPrompt'; 
-// const apiUrl = 'https://backendlogictech.cloudbyvin.com'
-const apiUrl = 'http://localhost:3000'
+const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+// const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -369,3 +369,66 @@ document.getElementById("connect-chatgpt-btn").addEventListener("click", showPop
 document.getElementById('popup-cancel').addEventListener('click', () => {
     document.getElementById("popup").style.display = "none";
 });
+
+// function addHistoryItems(count) {
+
+//     const historyList = document.getElementById("historyBar");
+//     // Clear any existing items
+//     historyList.innerHTML = "";
+//     // for (let i = 0; i < 2; i++) {
+//         //     const li = document.createElement("li");
+//         //     li.classList.add("custom-history-item");
+//         //     historyList.appendChild(li);
+//         // }
+//         // Add specified number of <li> items
+//         // for (let i = 1; i <= count; i++) {
+//             console.log("countcountcount",count);
+//     count.map((item,index)=>{
+//            alert("inside mao",item)
+//         const li = document.createElement("li");
+//         li.id = `history-item-${i}`;
+//         li.innerHTML = `<i id="history-item-1"><i class="fas fa-history"></i> History Item ${i}`;
+//         li.id = `history-item-${i}`;
+//         li.classList.add("custom-history-item");
+
+//          if (index === 0) {
+//             li.style.marginTop = "100px";
+//         }
+
+//         historyList.appendChild(li);
+//        })
+       
+//     // }
+// }
+
+// // Call the function with the desired count
+// const arr = ["10","20","30"]
+// addHistoryItems(arr); // 
+
+function addHistoryItems(count) {
+    const historyList = document.getElementById("historyBar");
+    // Clear any existing items
+    historyList.innerHTML = "";
+
+    // Add specified number of <li> items
+    count.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.id = `history-item-${index + 1}`; // Use the index to generate a unique id
+        li.classList.add("custom-history-item");
+
+        // Add content inside the li
+        li.innerHTML = `<i class="fas fa-history"></i>${item}`;
+
+        // Add some margin for the first item (optional)
+        if (index === 0) {
+            li.style.marginTop = "100px";
+        }
+
+        // Append the list item to the history bar
+        historyList.appendChild(li);
+    });
+}
+
+// Call the function with the desired array
+const arr = ["10", "20", "30","30"];
+addHistoryItems(arr); 

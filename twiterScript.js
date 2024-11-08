@@ -1,5 +1,5 @@
-// const apiUrl = 'https://backendlogictech.cloudbyvin.com'
-const apiUrl = 'http://localhost:3000'
+const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+// const apiUrl = 'http://localhost:3000'
 // Check if user is already authenticated
 function checkAuthentication() {
     const oauth_token = localStorage.getItem('oauth_token');
