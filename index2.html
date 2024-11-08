@@ -324,7 +324,7 @@
                     body: JSON.stringify({email: localStorage.getItem('userEmail') || 'default@example.com'})
                 });
                 const data = await response.json();
-
+                console.log("datadatadatadata",data);
                 if (data.success) {
                     document.getElementById("overlay").style.display = "none";
                     document.getElementById("popup").style.display = "none";

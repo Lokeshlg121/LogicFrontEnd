@@ -1,14 +1,15 @@
 // API endpoint
 // const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt'; 
 // const apiEndpoint = 'http://localhost:3000/getPrompt'; 
-const apiUrl = 'https://backendlogictech.cloudbyvin.com'
-// const apiUrl = 'http://localhost:3000'
+// const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
 
 // To prevent multiple submissions
 let isSubmitting = false;
+const chatId = Math.random().toString(16).slice(2)
 // Handle user input with Enter key
 userInput.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter' && !e.shiftKey && userInput.value.trim()) {
@@ -172,7 +173,8 @@ async function callChatGPTApi(question) {
         },
         body: JSON.stringify({
             prompt: question,
-            userId: email
+            userId: email,
+            pageId: chatId,
         }),
     });
     console.log("responseresponseresponse",response);
@@ -406,6 +408,7 @@ document.getElementById('popup-cancel').addEventListener('click', () => {
 // addHistoryItems(arr); // 
 
 function addHistoryItems(count) {
+    alert(count);
     const historyList = document.getElementById("historyBar");
     // Clear any existing items
     historyList.innerHTML = "";
@@ -417,13 +420,15 @@ function addHistoryItems(count) {
         li.classList.add("custom-history-item");
 
         // Add content inside the li
-        li.innerHTML = `<i class="fas fa-history"></i>${item}`;
+        li.innerHTML = `<i class="fas fa-history"></i>${item.content}`;
 
         // Add some margin for the first item (optional)
         if (index === 0) {
             li.style.marginTop = "100px";
         }
-
+        li.addEventListener("click", () => {
+            handleChatItemClick(item); // Pass the item data when clicked
+        });
         // Append the list item to the history bar
         historyList.appendChild(li);
     });
@@ -431,4 +436,33 @@ function addHistoryItems(count) {
 
 // Call the function with the desired array
 const arr = ["10", "20", "30","30"];
-addHistoryItems(arr); 
+async function fetchHistoryData() {
+    try {
+        const email = localStorage.getItem('userEmail') || 'default@example.com'; // Replace 'default@example.com' with your desired default value
+        // Call your API, passing the emailId as part of the request (URL or body)
+        const response = await fetch(`${apiUrl}/getChatIds?email=${encodeURIComponent(email)}`);
+        
+        if (!response.ok) {
+            throw new Error("Failed to fetch data");
+        }
+
+        const data = await response.json();
+
+        // Assuming 'data' is an array you want to map over
+        // const historyItems = data.map(item => item.description); // Example of mapping the array to get descriptions
+
+        // Now call addHistoryItems with the mapped data
+        // alert(data.uniqueData);
+        addHistoryItems(data.uniqueData);
+    } catch (error) {
+        // alert(error);
+        console.error("Error fetching history data:", error);
+    }
+}
+function handleChatItemClick(item) {
+    alert(`You clicked on: ${item.content}`);
+    messagesDiv.innerHTML = item.content;
+}
+fetchHistoryData() ;
+
+// addHistoryItems(arr); 
