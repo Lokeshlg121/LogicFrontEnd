@@ -1,4 +1,7 @@
 const apiUrl = 'https://backendlogictech.cloudbyvin.com'
+// const apiUrl = 'http://localhost:3000'
+
+
 window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get('accessToken');
@@ -61,3 +64,40 @@ window.addEventListener('load', () => {
     }
   });
   
+  document.getElementById('sidebar-toggle').addEventListener('click', function() {
+    const sidebar = document.getElementById('sidebar');
+    const appWrapper = document.getElementById('app-wrapper');
+    sidebar.classList.toggle('active');
+    appWrapper.classList.toggle('active');
+});
+
+document.getElementById('twitter-login').addEventListener('click', function() {
+  window.open('twitterUi.html', '_blank');
+});
+
+document.getElementById('google-login').addEventListener('click', () => {
+  console.log("hiiiii")
+  window.open('gmailUi.html', '_blank');
+});
+
+// document.getElementById('twitter-login').addEventListener('click', async () => {
+//   try {
+//       console.log("About to call login API for Twitter");
+//       const response = await fetch(`${apiUrl}/login-twitter`, {
+//           method: 'GET',
+//           credentials: 'include'
+//       });
+
+//       if (response.ok) {
+//           const data = await response.json();
+//           console.log("Redirecting to Twitter authorization URL:", data.url);
+//           window.location.href = data.url;
+//       } else {
+//           const errorData = await response.json();
+//           alert('Error during Twitter login: ' + errorData.error);
+//       }
+//   } catch (error) {
+//       console.error('Error during login request:', error);
+//       alert('Error during login request: ' + error.message);
+//   }
+// });

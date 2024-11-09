@@ -187,6 +187,7 @@ async function callChatGPTApi(question) {
         alert(response.message)
     }
     const data = await response.json();
+    fetchHistoryData();
     return data;
 }
 
@@ -196,14 +197,14 @@ async function callChatGPTApi(question) {
 // Display the response from the API and clear existing messages
 function displayApiResponse(apiResponse) {
     // Clear existing messages in the chat window
-    messagesDiv.innerHTML = '';
+    // messagesDiv.innerHTML = '';
 
     // Check if the API response is successful
     if (apiResponse.statusCode === 200) {
         // If there's a conversation array, add each message in order
         if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
             apiResponse.conversation.forEach(convo => {
-                if (convo.role === 'user') {
+                if (convo.role === 'user111') {
                     appendMessage('> ' + convo.content, 'user-message');
                 } else if (convo.role === 'assistant') {
                     appendMessage(convo.content, 'bot-message');
@@ -469,6 +470,7 @@ async function handleChatItemClick(item) {
 
     const data = await response.json();
     // console.log('data',data)
+        messagesDiv.innerHTML = '';
     data.uniqueData.map((convo)=>{
         // if (apiResponse.conversation && Array.isArray(apiResponse.conversation)) {
             // apiResponse.conversation.forEach(convo => {
@@ -477,13 +479,6 @@ async function handleChatItemClick(item) {
                 } else if (convo.role === 'assistant') {
                     appendMessage(convo.content, 'bot-message');
                 }
-            // });
-        // } else {
-        //     // Add the main response message to the chat if no conversation array is present
-        //     appendMessage(apiResponse.response, 'bot-message');
-        // }
         })
 }
 fetchHistoryData() ;
-
-// addHistoryItems(arr); 
