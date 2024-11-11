@@ -1,6 +1,6 @@
 const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 // const apiUrl = 'http://localhost:3000'
-
+// 
 
 window.addEventListener('load', () => {
     const fetchEmailsBtn = document.getElementById('fetch-emails-btn');
