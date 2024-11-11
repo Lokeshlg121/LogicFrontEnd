@@ -3,8 +3,15 @@ const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 
 
 window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('accessToken');
+  
     const fetchEmailsBtn = document.getElementById('fetch-emails-btn');
-    const email = localStorage.getItem('userEmail')
+    if (accessToken) {
+      // Enable the Fetch Emails button after authentication
+      fetchEmailsBtn.disabled = false;
+    }
+  
     // Event listener for "Fetch Emails" button click
     fetchEmailsBtn.addEventListener('click', async () => {
       try {
@@ -13,15 +20,17 @@ window.addEventListener('load', () => {
         emailList.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
   
         // Fetch emails from the backend API using the access token
-        const response = await fetch(`${apiUrl}/getUserDbEmails?email=${encodeURIComponent(email)}`, {
+        const response = await fetch(`${apiUrl}/api/emails`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}` // Pass the access token in the Authorization header
+          }
         });
   
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
   
-        const data = await response.json();
-        const emails = data.uniqueData;
+        const emails = await response.json();
         emailList.innerHTML = ''; // Clear the existing list
   
         // Display emails if available
@@ -42,33 +51,17 @@ window.addEventListener('load', () => {
     function createEmailCard(email) {
       const emailItem = document.createElement('div');
       emailItem.className = 'card mb-3';
-    
       emailItem.innerHTML = `
         <div class="card-body">
-          <h5 class="card-title">From: ${email.senderEmail || "Unknown"}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Subject: ${email.ContentSubject || "No subject"}</h6>
+          <h5 class="card-title">From: ${email.from}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Subject: ${email.subject}</h6>
+          <p class="card-text"><strong>Snippet:</strong> ${email.snippet}</p>
           <p class="card-text"><strong>Body:</strong></p>
-          <div class="email-body">${email.contentDescription || "No content"}</div>
-                <button class="btn btn-warning mt-3 summarize-btn" data-email='${JSON.stringify(email)}'>Summarize It</button>
+          <pre>${email.body}</pre>
         </div>
       `;
-      
       return emailItem;
     }
-    function handleSummarizeClick(event) {
-      const email = JSON.parse(event.target.getAttribute('data-email'));
-
-      // Store the email data in sessionStorage
-      sessionStorage.setItem("emailData", JSON.stringify(email));
-
-      // Redirect to the summarization page
-      window.location.href = 'index2.html';  // Replace with your actual redirect URL
-  }
-  document.getElementById('email-list').addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('summarize-btn')) {
-        handleSummarizeClick(event);
-    }
-});
   });
   
   document.getElementById('sidebar-toggle').addEventListener('click', function() {
@@ -87,9 +80,17 @@ document.getElementById('google-login').addEventListener('click', () => {
   window.open('gmailUi.html', '_blank');
 });
 
+// document.getElementById('twitter-login').addEventListener('click', async () => {
 //   try {
 //       console.log("About to call login API for Twitter");
-//               console.log("Redirecting to Twitter authorization URL:", data.url);
+//       const response = await fetch(`${apiUrl}/login-twitter`, {
+//           method: 'GET',
+//           credentials: 'include'
+//       });
+
+//       if (response.ok) {
+//           const data = await response.json();
+//           console.log("Redirecting to Twitter authorization URL:", data.url);
 //           window.location.href = data.url;
 //       } else {
 //           const errorData = await response.json();
@@ -99,11 +100,4 @@ document.getElementById('google-login').addEventListener('click', () => {
 //       console.error('Error during login request:', error);
 //       alert('Error during login request: ' + error.message);
 //   }
-// });   const response = await fetch(`${apiUrl}/login-twitter`, {
-//           method: 'GET',
-//           credentials: 'include'
-//       });
-
-//       if (response.ok) {
-//           const data = await response.json();
-//
+// });

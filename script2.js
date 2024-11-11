@@ -4,7 +4,7 @@ const apiEndpoint = 'https://backendlogictech.cloudbyvin.com/getPrompt';
 const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 // const apiUrl = 'http://localhost:3000'
 const messagesDiv = document.getElementById('messages');
-const userInput = document.getElementById('user-input');
+let userInput = document.getElementById('user-input');
 const submitBtn = document.getElementById('submit-btn');
 
 // To prevent multiple submissions
@@ -103,8 +103,9 @@ userInput.addEventListener('input', () => {
 
 // Handle the user input and send it to the API
 async function handleUserInput() {
+    console.log("userInput.valueuserInput.valueuserInput.value",userInput);
     const question = userInput.value.trim();
-
+    console.log("questionquestionquestion",question);
     if (!question || isSubmitting) return;
 
     appendMessage('> ' + question, 'user-message');
@@ -243,15 +244,6 @@ async function sendTextToApi(messageText) {
                 oauth_token: oauth_token
             }),
         });
-        // const response = await fetch('http://35.94.170.31:3000/postTweet', {  // Replace with your actual API endpoint
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         tweetContent: messageText
-        //     }),
-        // });
         const data = await response.json();
         if (response.ok) {
             alert('Tweet posted successfully: ' + data.tweet.full_text);
@@ -291,14 +283,6 @@ document.getElementById('popup-submit').addEventListener('click', () => {
             console.log('API response:', data);
             document.getElementById('popup') ? document.getElementById('popup').remove() : '';
             document.getElementById('popup-overlay') ? document.getElementById('popup-overlay').remove(): '';
-           
-            console.log("data.statusCodedata.statusCodedata.statusCode",data);
-        //     if(data.statusCode ===400){
-        //         alert('Enter valid chast gpt id')                
-        // // Close the popup after submitting
-        // document.getElementById('popup').style.display = 'none';
-        // document.getElementById('popup-overlay').style.display = 'none';
-        //     }
         location.reload();
         })
         .catch(error => {
@@ -341,30 +325,6 @@ function updateKey(){
     }
 }
 
-function checkKeyStatus() {
-    // Example API call using fetch
-    fetch("https://example.com/api/check-key-status")
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Hide popup if API returns success
-                document.getElementById("overlay").style.display = "none";
-                document.getElementById("popup").style.display = "none";
-            } else {
-                // Show popup if API returns false
-                document.getElementById("overlay").style.display = "block";
-                document.getElementById("popup").style.display = "block";
-            }
-        })
-        .catch(error => {
-            console.error("Error checking key status:", error);
-            // Optionally, handle errors by showing the popup
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("popup").style.display = "block";
-        });
-}
-
-
 // Function to show the popup
 function showPopup() {
     document.getElementById("overlay").style.display = "block";
@@ -378,41 +338,6 @@ document.getElementById("connect-chatgpt-btn").addEventListener("click", showPop
 document.getElementById('popup-cancel').addEventListener('click', () => {
     document.getElementById("popup").style.display = "none";
 });
-
-// function addHistoryItems(count) {
-
-//     const historyList = document.getElementById("historyBar");
-//     // Clear any existing items
-//     historyList.innerHTML = "";
-//     // for (let i = 0; i < 2; i++) {
-//         //     const li = document.createElement("li");
-//         //     li.classList.add("custom-history-item");
-//         //     historyList.appendChild(li);
-//         // }
-//         // Add specified number of <li> items
-//         // for (let i = 1; i <= count; i++) {
-//             console.log("countcountcount",count);
-//     count.map((item,index)=>{
-//            alert("inside mao",item)
-//         const li = document.createElement("li");
-//         li.id = `history-item-${i}`;
-//         li.innerHTML = `<i id="history-item-1"><i class="fas fa-history"></i> History Item ${i}`;
-//         li.id = `history-item-${i}`;
-//         li.classList.add("custom-history-item");
-
-//          if (index === 0) {
-//             li.style.marginTop = "100px";
-//         }
-
-//         historyList.appendChild(li);
-//        })
-       
-//     // }
-// }
-
-// // Call the function with the desired count
-// const arr = ["10","20","30"]
-// addHistoryItems(arr); // 
 
 function addHistoryItems(count) {
     // alert(count);
@@ -481,4 +406,18 @@ async function handleChatItemClick(item) {
                 }
         })
 }
+
+async function fetchRedirectedData(){
+    const emailData = JSON.parse(sessionStorage.getItem("emailData"));
+    console.log("emailDataemailDataemailDataemailDataemailData",emailData);
+    if(emailData && emailData.contentDescription){
+        console.log("INside if ")
+        userInput.value = emailData.contentDescription.trim();
+        userInput.value += "\n\n" + "summarize above information in the format so that i can directly tweet it without making any changes";
+        await handleUserInput(); 
+    }
+}
+
+
 fetchHistoryData() ;
+fetchRedirectedData();
