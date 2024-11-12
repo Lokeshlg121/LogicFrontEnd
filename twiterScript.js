@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', checkAuthentication);
 // Event listener for login with Twitter button
 document.getElementById('login-twitter-btn').addEventListener('click', async () => {
     try {
+        const isTwitterConnected = localStorage.getItem('isTwitterConnected');
+        console.log("isTwitterConnectedisTwitterConnected",isTwitterConnected);
+        if(isTwitterConnected){
+            const userChoice = confirm("Twitter is already connected in the application. Do you still want to connect Twitter again?");
+    
+            if (!userChoice) {
+              // User selected "No"
+              return; // Exit the function
+            }
+        }
         const response = await fetch(`${apiUrl}/login-twitter`, {
             method: 'GET',
             credentials: 'include'
@@ -47,7 +57,7 @@ async function handleTwitterCallback() {
     console.log("oauth_token",oauth_token,"sdsd",oauth_verifier)
     if (oauth_token && oauth_verifier) {
         try {
-            const response = await fetch('https://backendlogictech.cloudbyvin.com/callback', {
+            const response = await fetch(`${apiUrl}/callback`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,3 +89,4 @@ async function handleTwitterCallback() {
 
 // Automatically handle callback if present in URL
 document.addEventListener('DOMContentLoaded', handleTwitterCallback);
+

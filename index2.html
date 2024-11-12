@@ -324,7 +324,9 @@
                     body: JSON.stringify({email: localStorage.getItem('userEmail') || 'default@example.com'})
                 });
                 const data = await response.json();
-                console.log("datadatadatadata",data);
+                console.log("getUserDetails reesponse",data.user.twitteraccessSecret);
+                localStorage.setItem("isTwitterConnected", data.user.isTwitterConnected);
+                // localStorage.setItem('')
                 if (data.success) {
                     document.getElementById("overlay").style.display = "none";
                     document.getElementById("popup").style.display = "none";

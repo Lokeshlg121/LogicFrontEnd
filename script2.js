@@ -226,14 +226,8 @@ function displayApiResponse(apiResponse) {
 async function sendTextToApi(messageText) {
    
     try {
-        const params = new URLSearchParams(window.location.search);
-        console.log("window.locationwindow.location",window.location);
-        const oauth_token2 = params.get('oauth_token');
-        console.log("oauth_token2oauth_token2oauth_token2oauth_token2oauth_token2",oauth_token2);
-        const oauth_token = localStorage.getItem('oauth_token') || oauth_token2;
-        console.log("inside function")
-        console.log("localStorage.getItem('oauth_token');",localStorage.getItem('oauth_token'));    
-        const response = await fetch(`${apiUrl}/tweet?oauth_token=${encodeURIComponent(oauth_token)}`, {
+        const userEmail = localStorage.getItem('userEmail');
+        const response = await fetch(`${apiUrl}/tweet`, {
             method: 'POST',
             credentials: 'include',
                 headers: {
@@ -241,12 +235,12 @@ async function sendTextToApi(messageText) {
             },
             body: JSON.stringify({
                 status: messageText,
-                oauth_token: oauth_token
+                userEmail: userEmail
             }),
         });
         const data = await response.json();
         if (response.ok) {
-            alert('Tweet posted successfully: ' + data.tweet.full_text);
+            alert('Tweet posted successfully');
         } else {
             alert('Error posting tweet: ' + (data.error || 'Unknown error'));
         }
@@ -418,6 +412,39 @@ async function fetchRedirectedData(){
     }
 }
 
+async function insertTwitterKey() {
+    const params = new URLSearchParams(window.location.search);
+    const twitteraccessToken = params.get('accessToken');
+    const twitteraccessSecret = params.get('accessSecret');
+    if (twitteraccessToken && twitteraccessSecret) {
+        const email = localStorage.getItem('userEmail');
+        try {
+            const response = await fetch(`${apiUrl}/insertTwitterKey`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    twitteraccessToken: twitteraccessToken,
+                    twitteraccessSecret: twitteraccessSecret,
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Successfully posted data:', result);
+            } else {
+                console.error('Failed to post data:', response.status);
+            }
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+    } else {
+        console.log('Missing Twitter access token or secret.');
+    }
+}
 
 fetchHistoryData() ;
 fetchRedirectedData();
+insertTwitterKey();
