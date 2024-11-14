@@ -137,3 +137,40 @@ document.getElementById('google-login').addEventListener('click', () => {
   console.log("hiiiii")
   window.open('gmailUi.html', '_blank');
 });
+
+
+
+async function insertGoogleKey() {
+    const params = new URLSearchParams(window.location.search);
+    const twitteraccessToken = params.get('accessToken');
+    const twitteraccessSecret = params.get('accessSecret');
+    if (twitteraccessToken && twitteraccessSecret) {
+        const email = localStorage.getItem('userEmail');
+        try {
+            const response = await fetch(`${apiUrl}/insertGoogleKey`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    token: twitteraccessToken,
+                    refresh_token: twitteraccessSecret,
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Successfully posted data:', result);
+            } else {
+                console.error('Failed to post data:', response.status);
+            }
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+    } else {
+        console.log('Missing Twitter access token or secret.');
+    }
+}
+
+insertGoogleKey();
