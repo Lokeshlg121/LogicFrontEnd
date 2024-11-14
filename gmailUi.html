@@ -12,6 +12,13 @@
   word-wrap: break-word; /* Break long words to avoid horizontal scrolling */
   overflow-wrap: break-word; /* Ensures that long words break appropriately */
   word-break: break-all; /* Optionally force breaking at any point */
+  #email-list {
+    margin-top: 20px;
+}
+
+.select-email-checkbox {
+    margin-top: 15px; /* Adjust based on desired vertical alignment */
+}
 }
   </style>
 </head>
@@ -31,7 +38,7 @@
     
     <!-- Button to fetch emails after authentication -->
     <button id="fetch-emails-btn" class="btn btn-success mb-3">Fetch Latest Emails</button>
-
+    <button id="summarize-selected-btn" class="btn btn-primary mb-3" style="display: none;">Summarize Selected Emails</button>
     <!-- Div to display fetched emails -->
     <div id="email-list" class="mt-4"></div>
   </div>
