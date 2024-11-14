@@ -20,16 +20,13 @@
     margin-top: 15px; /* Adjust based on desired vertical alignment */
 }
 }
+#filter-dropdown {
+    margin-top: 20px; /* Adjust if necessary */
+}
+
   </style>
 </head>
 <body>
-  <div class="sidebar" id="sidebar">
-    <ul>
-        <li id="twitter-login"><i class="fab fa-twitter"></i> Twitter</li>
-        <li id="google-login"><i class="fab fa-google"></i> Google</li>
-    </ul>
-  </div>
-  
   <div class="container text-center">
     <h1 class="my-4">Gmail Reader</h1>
     
@@ -41,6 +38,15 @@
     <button id="summarize-selected-btn" class="btn btn-primary mb-3" style="display: none;">Summarize Selected Emails</button>
     <!-- Div to display fetched emails -->
     <div id="email-list" class="mt-4"></div>
+  </div>
+  <div class="dropdown position-absolute top-0 end-0" id="filter-dropdown" style="display: none;">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Filter Emails
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item filter-option" href="#" data-filter="election">Election</a></li>
+        <li><a class="dropdown-item filter-option" href="#" data-filter="weather">Weather</a></li>
+       </ul>
   </div>
 
   <script src="gmailScript.js"></script>

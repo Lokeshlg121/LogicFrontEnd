@@ -40,7 +40,7 @@ document.getElementById('login-twitter-btn').addEventListener('click', async () 
             window.location.href = data.url; // Redirect user to Twitter authorization page
         } else {
             const errorData = await response.json();
-            alert('Error during Twitter login: ' + errorData.error);
+            // alert('Error during Twitter login: ' + errorData.error);
         }
     } catch (error) {
         console.error('Error during login request:', error);
@@ -71,7 +71,7 @@ async function handleTwitterCallback() {
                 // Store tokens in local storage
                 localStorage.setItem('oauth_token', data.access_token);
                 localStorage.setItem('oauth_verifier', oauth_verifier);
-                alert("hey boy",data.access_token);
+                // alert("hey boy",data.access_token);
                 // console.log()
                 document.getElementById('tweet-container').style.display = 'block';
                 document.getElementById('login-twitter-btn').style.display = 'none';

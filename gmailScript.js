@@ -1,12 +1,13 @@
 const apiUrl = 'https://backendlogictech.cloudbyvin.com'
 // const apiUrl = 'http://localhost:3000'
 // 
+const fetchEmailsBtn = document.getElementById('fetch-emails-btn');
+const summarizeSelectedBtn = document.getElementById('summarize-selected-btn');
+const filterDropdown = document.getElementById('filter-dropdown');
+const email = localStorage.getItem('userEmail');
 
 window.addEventListener('load', () => {
-  const fetchEmailsBtn = document.getElementById('fetch-emails-btn');
-  const summarizeSelectedBtn = document.getElementById('summarize-selected-btn');
-  const email = localStorage.getItem('userEmail');
-  
+    insertGoogleKey();
   // Event listener for "Fetch Emails" button click
   fetchEmailsBtn.addEventListener('click', async () => {
       try {
@@ -26,6 +27,7 @@ window.addEventListener('load', () => {
 
           // Display emails if available
           if (emails.length) {
+            filterDropdown.style.display = 'block'; // Show filter dropdown
               emails.forEach(email => {
                   emailList.appendChild(createEmailCard(email));
               });
@@ -38,34 +40,7 @@ window.addEventListener('load', () => {
       }
   });
 
-  // Function to create an email card with a checkbox positioned outside the card
-  function createEmailCard(email) {
-      const container = document.createElement('div');
-      container.className = 'd-flex align-items-start mb-3';
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'select-email-checkbox me-2';
-      checkbox.setAttribute('data-email', JSON.stringify(email));
-
-      const emailCard = document.createElement('div');
-      emailCard.className = 'card flex-grow-1';
-
-      emailCard.innerHTML = `
-          <div class="card-body">
-              <h5 class="card-title">From: ${email.senderEmail || "Unknown"}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Subject: ${email.ContentSubject || "No subject"}</h6>
-              <p class="card-text"><strong>Body:</strong></p>
-              <div class="email-body">${email.contentDescription || "No content"}</div>
-              <button class="btn btn-warning mt-3 summarize-btn" data-email='${JSON.stringify(email)}'>Summarize It</button>
-          </div>
-      `;
-
-      container.appendChild(checkbox);
-      container.appendChild(emailCard);
-
-      return container;
-  }
+ 
 
   // Event handler for individual email summarization
   function handleSummarizeClick(event) {
@@ -122,12 +97,12 @@ window.addEventListener('load', () => {
 });
 ;
   
-  document.getElementById('sidebar-toggle').addEventListener('click', function() {
-    const sidebar = document.getElementById('sidebar');
-    const appWrapper = document.getElementById('app-wrapper');
-    sidebar.classList.toggle('active');
-    appWrapper.classList.toggle('active');
-});
+//   document.getElementById('sidebar-toggle').addEventListener('click', function() {
+//     const sidebar = document.getElementById('sidebar');
+//     const appWrapper = document.getElementById('app-wrapper');
+//     sidebar.classList.toggle('active');
+//     appWrapper.classList.toggle('active');
+// });
 
 document.getElementById('twitter-login').addEventListener('click', function() {
   window.open('twitterUi.html', '_blank');
@@ -144,6 +119,9 @@ async function insertGoogleKey() {
     const params = new URLSearchParams(window.location.search);
     const twitteraccessToken = params.get('accessToken');
     const twitteraccessSecret = params.get('accessSecret');
+    console.log("twitteraccessTokentwitteraccessTokentwitteraccessToken",twitteraccessToken)
+    console.log("accessSecretaccessSecretaccessSecret",twitteraccessSecret)
+
     if (twitteraccessToken && twitteraccessSecret) {
         const email = localStorage.getItem('userEmail');
         try {
@@ -173,4 +151,76 @@ async function insertGoogleKey() {
     }
 }
 
-insertGoogleKey();
+
+(async function setupFilterOptions() {
+    document.querySelectorAll('.filter-option').forEach(option => {
+      option.addEventListener('click', async (event) => {
+        event.preventDefault();
+        selectedFilter = event.target.getAttribute('data-filter');
+        alert(selectedFilter, "[][][");
+        await filterdEmails(selectedFilter);
+        // fetchEmails(selectedFilter);
+      });
+    });
+  })();
+  
+
+async function filterdEmails(contentCategory){
+    try {
+        const emailList = document.getElementById('email-list');
+        emailList.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+        // Fetch emails from the backend API
+        // const response = await fetch(`${apiUrl}/getUserDbEmails?email=${encodeURIComponent(email)}`, {});
+        const response = await fetch(`${apiUrl}/getUserDbEmails?email=${encodeURIComponent(email)}&contentCategory=${contentCategory}`, {});
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const emails = data.uniqueData;
+        emailList.innerHTML = ''; // Clear the existing list
+
+        // Display emails if available
+        if (emails.length) {
+          filterDropdown.style.display = 'block'; // Show filter dropdown
+            emails.forEach(email => {
+                emailList.appendChild(createEmailCard(email));
+            });
+        } else {
+            emailList.innerHTML = '<div class="alert alert-info">No emails found.</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching emails:', error);
+        document.getElementById('email-list').innerHTML = `<div class="alert alert-danger">Error fetching emails: ${error.message}. Please try again.</div>`;
+    }
+}
+
+ // Function to create an email card with a checkbox positioned outside the card
+ function createEmailCard(email) {
+    const container = document.createElement('div');
+    container.className = 'd-flex align-items-start mb-3';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'select-email-checkbox me-2';
+    checkbox.setAttribute('data-email', JSON.stringify(email));
+
+    const emailCard = document.createElement('div');
+    emailCard.className = 'card flex-grow-1';
+
+    emailCard.innerHTML = `
+        <div class="card-body">
+            <h5 class="card-title">From: ${email.senderEmail || "Unknown"}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Subject: ${email.ContentSubject || "No subject"}</h6>
+            <p class="card-text"><strong>Body:</strong></p>
+            <div class="email-body">${email.contentDescription || "No content"}</div>
+            <button class="btn btn-warning mt-3 summarize-btn" data-email='${JSON.stringify(email)}'>Summarize It</button>
+        </div>
+    `;
+
+    container.appendChild(checkbox);
+    container.appendChild(emailCard);
+
+    return container;
+}

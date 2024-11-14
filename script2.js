@@ -43,10 +43,8 @@ document.getElementById('twitter-login').addEventListener('click', async () => {
             window.location.href = data.url;
         } else {
             const errorData = await response.json();
-            alert('Error during Twitter login: ' + errorData.error);
         }
     } catch (error) {
-        console.error('Error during login request:', error);
         alert('Error during login request: ' + error.message);
     }
 });
@@ -54,7 +52,6 @@ document.getElementById('twitter-login').addEventListener('click', async () => {
 // Handle Twitter callback and redirect to success page
 async function handleTwitterCallback() {
     const params = new URLSearchParams(window.location.search);
-    console.log("window.locationwindow.location",window.location);
     const oauth_token = params.get('oauth_token');
     const oauth_verifier = params.get('oauth_verifier');
 
