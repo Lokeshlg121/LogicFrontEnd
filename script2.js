@@ -29,25 +29,25 @@ document.getElementById('sidebar-toggle').addEventListener('click', function() {
 });
 
 // Add event listener for Twitter login button
-document.getElementById('twitter-login').addEventListener('click', async () => {
-    try {
-        console.log("About to call login API for Twitter");
-        const response = await fetch(`${apiUrl}/login-twitter`, {
-            method: 'GET',
-            credentials: 'include'
-        });
+// document.getElementById('twitter-login').addEventListener('click', async () => {
+//     try {
+//         console.log("About to call login API for Twitter");
+//         const response = await fetch(`${apiUrl}/login-twitter`, {
+//             method: 'GET',
+//             credentials: 'include'
+//         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Redirecting to Twitter authorization URL:", data.url);
-            window.location.href = data.url;
-        } else {
-            const errorData = await response.json();
-        }
-    } catch (error) {
-        alert('Error during login request: ' + error.message);
-    }
-});
+//         if (response.ok) {
+//             const data = await response.json();
+//             console.log("Redirecting to Twitter authorization URL:", data.url);
+//             window.location.href = data.url;
+//         } else {
+//             const errorData = await response.json();
+//         }
+//     } catch (error) {
+//         alert('Error during login request: ' + error.message);
+//     }
+// });
 
 // Handle Twitter callback and redirect to success page
 async function handleTwitterCallback() {

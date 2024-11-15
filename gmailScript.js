@@ -104,16 +104,32 @@ window.addEventListener('load', () => {
 //     appWrapper.classList.toggle('active');
 // });
 
-document.getElementById('twitter-login').addEventListener('click', function() {
-  window.open('twitterUi.html', '_blank');
+// document.getElementById('twitter-login').addEventListener('click', function() {
+//   window.open('twitterUi.html', '_blank');
+// });
+
+// document.getElementById('google-login').addEventListener('click', () => {
+//   console.log("hiiiii")
+//   window.open('gmailUi.html', '_blank');
+// });
+// const filterDropdown = document.getElementById('filter-dropdown');
+filterDropdown.addEventListener('click', async (event) => {
+  const option = event.target.closest('.filter-option');
+  if (option) {
+    event.preventDefault();
+    const selectedFilter = option.getAttribute('data-filter');
+    console.log(`Selected filter: ${selectedFilter}`);
+    await filterdEmails(selectedFilter);
+  }
 });
-
-document.getElementById('google-login').addEventListener('click', () => {
-  console.log("hiiiii")
-  window.open('gmailUi.html', '_blank');
+document.querySelectorAll('.filter-option').forEach(option => {
+  option.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const selectedFilter = event.target.getAttribute('data-filter');
+    console.log(`Selected filter: ${selectedFilter}`);
+    await filterdEmails(selectedFilter);
+  });
 });
-
-
 
 async function insertGoogleKey() {
     const params = new URLSearchParams(window.location.search);
@@ -150,20 +166,20 @@ async function insertGoogleKey() {
         console.log('Missing Twitter access token or secret.');
     }
 }
-
-
-(async function setupFilterOptions() {
-    document.querySelectorAll('.filter-option').forEach(option => {
-      option.addEventListener('click', async (event) => {
-        event.preventDefault();
-        selectedFilter = event.target.getAttribute('data-filter');
-        alert(selectedFilter, "[][][");
-        await filterdEmails(selectedFilter);
-        // fetchEmails(selectedFilter);
-      });
-    });
-  })();
-  
+async function setupFilterOptions() {
+ 
+  };
+//   filterDropdown.addEventListener('click', async () => {
+//     console.log("inside function")
+//   document.querySelectorAll('.filter-option').forEach(option => {
+//     option.addEventListener('click', async (event) => {
+//       event.preventDefault();
+//       selectedFilter = event.target.getAttribute('data-filter');
+//       await filterdEmails(selectedFilter);
+//       // fetchEmails(selectedFilter);
+//     });
+//   });
+// });
 
 async function filterdEmails(contentCategory){
     try {

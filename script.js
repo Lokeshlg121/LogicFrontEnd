@@ -44,11 +44,11 @@ signupForm.addEventListener('submit', async (e) => {
             window.location.href = 'index2.html'; // Redirect to index2.html
             toggleForms(); // Switch to login form
         } else {
-            alert(data || 'Signup failed.');
+            alert(data.error);
         }
     } catch (error) {
         console.error('Error during signup:', error);
-        alert('There was an issue signing up.');
+        alert('There was an issue signing up.',error);
     }
 });
 
