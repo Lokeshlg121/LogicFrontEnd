@@ -236,7 +236,10 @@ async function sendTextToApi(messageText) {
             }),
         });
         const data = await response.json();
-        if (response.ok) {
+        console.log("datadatadata",data);
+        if(data.statusCode == 400){
+            alert(data.message);   
+        }else if (response.ok) {
             alert('Tweet posted successfully');
         } else {
             alert('Error posting tweet: ' + (data.error || 'Unknown error'));
