@@ -508,7 +508,8 @@ function sendEmailApiCall(senderEmails, message) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        console.log("Data",data)
+        if (data.statusCode == 200) {
             alert("Email sent successfully to all recipients!");
         } else {
             alert("Failed to send the email. Please try again.");
