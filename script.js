@@ -70,12 +70,13 @@ loginForm.addEventListener('submit', async (e) => {
         });
 
         const data = await response.json();
+        console.log("datadatadata",data);
         if (data.success) {
             localStorage.setItem('userEmail', email); // Store email in localStorage
             alert('Login successful!');
             window.location.href = 'index2.html'; // Redirect to index2.html
         } else {
-            alert('Login failed.');
+            alert(data.error);
         }
     } catch (error) {
         console.error('Error during login:', error);
