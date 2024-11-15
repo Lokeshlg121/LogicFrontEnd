@@ -29,25 +29,25 @@ document.getElementById('sidebar-toggle').addEventListener('click', function() {
 });
 
 // Add event listener for Twitter login button
-document.getElementById('twitter-login').addEventListener('click', async () => {
-    try {
-        console.log("About to call login API for Twitter");
-        const response = await fetch(`${apiUrl}/login-twitter`, {
-            method: 'GET',
-            credentials: 'include'
-        });
+// document.getElementById('twitter-login').addEventListener('click', async () => {
+//     try {
+//         console.log("About to call login API for Twitter");
+//         const response = await fetch(`${apiUrl}/login-twitter`, {
+//             method: 'GET',
+//             credentials: 'include'
+//         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Redirecting to Twitter authorization URL:", data.url);
-            window.location.href = data.url;
-        } else {
-            const errorData = await response.json();
-        }
-    } catch (error) {
-        alert('Error during login request: ' + error.message);
-    }
-});
+//         if (response.ok) {
+//             const data = await response.json();
+//             console.log("Redirecting to Twitter authorization URL:", data.url);
+//             window.location.href = data.url;
+//         } else {
+//             const errorData = await response.json();
+//         }
+//     } catch (error) {
+//         alert('Error during login request: ' + error.message);
+//     }
+// });
 
 // Handle Twitter callback and redirect to success page
 async function handleTwitterCallback() {
@@ -153,6 +153,21 @@ function appendMessage(message, className) {
         });
 
         messageElement.appendChild(twitterIcon);
+
+        // add support of gmail
+        const gmailIcon = document.createElement('a');
+        gmailIcon.href = '#';
+        gmailIcon.innerHTML = '<i class="fab fa-google"></i>'; // Gmail envelope icon
+        gmailIcon.style.marginLeft = '10px';
+    
+        gmailIcon.addEventListener('click', () => {
+            const isConfirmed = confirm('Are you sure you want to send this message via Gmail?');
+            if (isConfirmed) {
+                sendTextToGmail(message);
+            }
+        });
+    
+        messageElement.appendChild(gmailIcon);
     }
 
     messagesDiv.appendChild(messageElement);
@@ -444,6 +459,67 @@ async function insertTwitterKey() {
         console.log('Missing Twitter access token or secret.');
     }
 }
+
+// Function to handle sending the message via Gmail
+function sendTextToGmail(message) {
+    // Create a popup to take the sender's email addresses
+    const senderEmailsInput = prompt("Enter one or more email addresses separated by commas:");
+
+    if (senderEmailsInput) {
+        // Split the input into an array, trim spaces, and filter out any empty entries
+        const senderEmails = senderEmailsInput.split(',').map(email => email.trim()).filter(email => email);
+
+        // Validate the email format for each entry
+        const invalidEmails = senderEmails.filter(email => !validateEmail(email));
+        if (invalidEmails.length > 0) {
+            alert(`The following email addresses are invalid: ${invalidEmails.join(', ')}`);
+            return;
+        }
+
+        // Confirm sending the email to the list of addresses
+        const isConfirmed = confirm(`Are you sure you want to send this message to: ${senderEmails.join(', ')}?`);
+        if (isConfirmed) {
+            // Call the API to send the email
+            sendEmailApiCall(senderEmails, message);
+        }
+    } else {
+        alert("Email sending canceled. No email addresses provided.");
+    }
+}
+
+// Helper function to validate email format using a regular expression
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Function to call an API to send the email
+function sendEmailApiCall(senderEmails, message) {
+    fetch(`${apiUrl}/sendEmail`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            senderEmails: senderEmails,  // Send as an array
+            message: message,
+            email: localStorage.getItem('userEmail'),
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Email sent successfully to all recipients!");
+        } else {
+            alert("Failed to send the email. Please try again.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while sending the email.");
+    });
+}
+
 
 fetchHistoryData() ;
 fetchRedirectedData();
